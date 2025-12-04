@@ -18,6 +18,7 @@ import * as hooks from './hooks';
 import messages from './messages';
 import TinyMceWidget from '../../sharedComponents/TinyMceWidget';
 import { prepareEditorRef, replaceStaticWithAsset } from '../../sharedComponents/TinyMceWidget/hooks';
+import AIAssistantWidget from '../../sharedComponents/AIAssistantWidget';
 
 const TextEditor = ({
   onClose,
@@ -77,6 +78,35 @@ const TextEditor = ({
     );
   };
 
+  // Function to get current content for AI assistant
+  const getCurrentContent = () => {
+    if (showRawEditor && editorRef?.current) {
+      return editorRef.current.state.doc.toString();
+    }
+    if (editorRef?.current) {
+      return editorRef.current.getContent();
+    }
+    return '';
+  };
+
+  // Function to update content from AI assistant
+  const updateContentFromAI = (newContent) => {
+    if (showRawEditor && editorRef?.current) {
+      // For RawEditor (CodeMirror), we need to replace the document
+      const transaction = editorRef.current.state.update({
+        changes: {
+          from: 0,
+          to: editorRef.current.state.doc.length,
+          insert: newContent,
+        },
+      });
+      editorRef.current.dispatch(transaction);
+    } else if (editorRef?.current) {
+      // For TinyMCE
+      editorRef.current.setContent(newContent);
+    }
+  };
+
   return (
     <EditorContainer
       getContent={hooks.getContent({ editorRef, showRawEditor })}
@@ -98,7 +128,16 @@ const TextEditor = ({
                 screenreadertext={intl.formatMessage(messages.spinnerScreenReaderText)}
               />
             </div>
-          ) : (selectEditor())}
+          ) : (
+            <>
+              <AIAssistantWidget
+                getCurrentContent={getCurrentContent}
+                updateContent={updateContentFromAI}
+                blockType="html"
+              />
+              {selectEditor()}
+            </>
+          )}
       </div>
     </EditorContainer>
   );

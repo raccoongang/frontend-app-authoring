@@ -1,12 +1,27 @@
 .editProblemView {
+  overflow-x: hidden;
+  max-width: 100%;
+  min-width: 0; // Prevents flex items from overflowing
+  width: 100%;
+
+  > span {
+    min-width: 0; // Prevents flex items from overflowing
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
   .editProblemView-settingsColumn {
     width: 320px;
     flex-grow: 0;
     flex-shrink: 0;
+    min-width: 0; // Prevents flex item from overflowing
   }
 
   .advancedEditorTopMargin {
     margin-top: 40px;
+    overflow-x: hidden;
+    max-width: 100%;
+    width: 100%;
   }
 
   .answer-option {
