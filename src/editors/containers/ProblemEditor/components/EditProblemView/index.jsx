@@ -154,15 +154,6 @@ const EditProblemView = ({
                     editorRef.current.dispatch(transaction);
                   }
                 }
-                
-                // Reset horizontal scroll position after content update
-                setTimeout(() => {
-                  const modalBody = document.querySelector('.pgn__modal-body');
-                  if (modalBody) {
-                    modalBody.scrollLeft = 0;
-                  }
-                  window.scrollTo({ left: 0, behavior: 'auto' });
-                }, 0);
               }}
               blockType={problemType || 'problem'}
             />
@@ -173,8 +164,6 @@ const EditProblemView = ({
             <AIAssistantWidget
               getCurrentContent={() => {
                 // For visual problem editor, we need to get the current OLX
-                // This is a simplified version - in practice, you might want to
-                // call parseState to get the current OLX representation
                 return problemState.rawOLX || '';
               }}
               updateContent={(newOLX) => {
@@ -202,17 +191,6 @@ const EditProblemView = ({
                   rawMarkdown: problemState.rawMarkdown,
                   isMarkdownEditorEnabled,
                 }));
-                
-                // Reset horizontal scroll position after content update
-                // Use setTimeout to ensure DOM has updated
-                setTimeout(() => {
-                  const modalBody = document.querySelector('.pgn__modal-body');
-                  if (modalBody) {
-                    modalBody.scrollLeft = 0;
-                  }
-                  // Also reset scroll on the window if needed
-                  window.scrollTo({ left: 0, behavior: 'auto' });
-                }, 0);
               }}
               blockType={problemType || 'problem'}
             />

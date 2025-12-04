@@ -48,6 +48,60 @@ const AIAssistantWidget: React.FC<AIAssistantWidgetProps> = ({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Apply styles to parent container to prevent horizontal scrolling
+  // This encapsulates all layout fixes within the widget
+  useEffect(() => {
+    // Find the parent .editProblemView container (for ProblemEditor)
+    const parentContainer = document.querySelector('.editProblemView');
+    if (!parentContainer) {
+      return;
+    }
+
+    // Apply styles to prevent horizontal overflow
+    const originalStyles = {
+      overflowX: (parentContainer as HTMLElement).style.overflowX,
+      maxWidth: (parentContainer as HTMLElement).style.maxWidth,
+      minWidth: (parentContainer as HTMLElement).style.minWidth,
+      width: (parentContainer as HTMLElement).style.width,
+    };
+
+    (parentContainer as HTMLElement).style.overflowX = 'hidden';
+    (parentContainer as HTMLElement).style.maxWidth = '100%';
+    (parentContainer as HTMLElement).style.minWidth = '0';
+    (parentContainer as HTMLElement).style.width = '100%';
+
+    // Apply styles to child spans
+    const childSpans = parentContainer.querySelectorAll('.editProblemView > span');
+    childSpans.forEach((span) => {
+      const spanEl = span as HTMLElement;
+      spanEl.style.minWidth = '0';
+      spanEl.style.maxWidth = '100%';
+      spanEl.style.overflowX = 'hidden';
+    });
+
+    // Apply styles to settings column
+    const settingsColumn = parentContainer.querySelector('.editProblemView-settingsColumn');
+    if (settingsColumn) {
+      (settingsColumn as HTMLElement).style.minWidth = '0';
+    }
+
+    // Apply styles to advanced editor container
+    const advancedEditor = parentContainer.querySelector('.advancedEditorTopMargin');
+    if (advancedEditor) {
+      (advancedEditor as HTMLElement).style.overflowX = 'hidden';
+      (advancedEditor as HTMLElement).style.maxWidth = '100%';
+      (advancedEditor as HTMLElement).style.width = '100%';
+    }
+
+    // Cleanup: restore original styles when component unmounts
+    return () => {
+      (parentContainer as HTMLElement).style.overflowX = originalStyles.overflowX || '';
+      (parentContainer as HTMLElement).style.maxWidth = originalStyles.maxWidth || '';
+      (parentContainer as HTMLElement).style.minWidth = originalStyles.minWidth || '';
+      (parentContainer as HTMLElement).style.width = originalStyles.width || '';
+    };
+  }, []);
+
   /**
    * Extract sequential_id from unitUrl ancestors
    */
@@ -159,6 +213,16 @@ const AIAssistantWidget: React.FC<AIAssistantWidgetProps> = ({
 
       // Update editor content with generated content
       updateContent(response.content);
+
+      // Reset horizontal scroll position after content update
+      // This prevents the modal from scrolling horizontally
+      setTimeout(() => {
+        const modalBody = document.querySelector('.pgn__modal-body');
+        if (modalBody) {
+          modalBody.scrollLeft = 0;
+        }
+        window.scrollTo({ left: 0, behavior: 'auto' });
+      }, 0);
     } catch (err: any) {
       const errorMessage = err?.response?.data?.error || err?.message || 'Failed to generate content. Please try again.';
       setError(errorMessage);
