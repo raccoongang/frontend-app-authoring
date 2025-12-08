@@ -115,48 +115,6 @@ const EditProblemView = ({
       <div className="editProblemView d-flex flex-row flex-nowrap justify-content-end">
         {isAdvancedProblemType || isMarkdownEditorEnabled ? (
           <Container fluid className="advancedEditorTopMargin p-0">
-            <AIAssistantWidget
-              getCurrentContent={() => {
-                if (isMarkdownEditorEnabled && editorRef?.current) {
-                  return editorRef.current.state.doc.toString();
-                }
-                if (editorRef?.current) {
-                  return editorRef.current.state.doc.toString();
-                }
-                return isMarkdownEditorEnabled ? problemState.rawMarkdown : problemState.rawOLX;
-              }}
-              updateContent={(newContent) => {
-                if (isMarkdownEditorEnabled) {
-                  dispatch(actions.problem.updateField({ rawMarkdown: newContent }));
-                  // Update the editor if it exists
-                  if (editorRef?.current) {
-                    const transaction = editorRef.current.state.update({
-                      changes: {
-                        from: 0,
-                        to: editorRef.current.state.doc.length,
-                        insert: newContent,
-                      },
-                    });
-                    editorRef.current.dispatch(transaction);
-                  }
-                } else {
-                  // For advanced/raw editor, update rawOLX and editor
-                  dispatch(actions.problem.updateField({ rawOLX: newContent }));
-                  // Update the editor if it exists
-                  if (editorRef?.current) {
-                    const transaction = editorRef.current.state.update({
-                      changes: {
-                        from: 0,
-                        to: editorRef.current.state.doc.length,
-                        insert: newContent,
-                      },
-                    });
-                    editorRef.current.dispatch(transaction);
-                  }
-                }
-              }}
-              blockType={problemType || 'problem'}
-            />
             <RawEditor editorRef={editorRef} lang={isMarkdownEditorEnabled ? 'markdown' : 'xml'} content={isMarkdownEditorEnabled ? problemState.rawMarkdown : problemState.rawOLX} />
           </Container>
         ) : (
