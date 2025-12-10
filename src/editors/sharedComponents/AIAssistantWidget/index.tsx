@@ -11,7 +11,43 @@ import {
 import { Send } from '@openedx/paragon/icons';
 import { selectors } from '../../data/redux';
 import { generateAIContent } from '../../data/services/aiContentAssistant/api';
+import { setAssetToStaticUrl } from '../TinyMceWidget/hooks';
 import './index.scss';
+
+// Type declarations for TinyMCE
+declare global {
+  interface Window {
+    tinymce?: {
+      editors?: Record<string, {
+        id?: string;
+        getContent?: (options?: { format?: string }) => string;
+        [key: string]: any;
+      }>;
+      [key: string]: any;
+    };
+  }
+}
+
+// Import problem editor utilities for direct content access
+// Using try-catch to handle potential circular dependencies gracefully
+let ReactStateOLXParser: any = null;
+let ReactStateSettingsParser: any = null;
+let fetchEditorContent: any = null;
+let parseState: any = null;
+
+try {
+  // Try to import synchronously - if there's a circular dependency, we'll handle it gracefully
+  const ReactStateOLXParserModule = require('../../containers/ProblemEditor/data/ReactStateOLXParser');
+  ReactStateOLXParser = ReactStateOLXParserModule.default || ReactStateOLXParserModule;
+  const ReactStateSettingsParserModule = require('../../containers/ProblemEditor/data/ReactStateSettingsParser');
+  ReactStateSettingsParser = ReactStateSettingsParserModule.default || ReactStateSettingsParserModule;
+  const hooksModule = require('../../containers/ProblemEditor/components/EditProblemView/hooks');
+  fetchEditorContent = hooksModule.fetchEditorContent;
+  parseState = hooksModule.parseState;
+} catch (error) {
+  // If imports fail (e.g., circular dependency), we'll use alternative methods
+  console.warn('AIAssistantWidget: Could not import problem editor utilities, will use alternative methods:', error);
+}
 
 interface AIAssistantWidgetProps {
   /** Function to get current editor content */
@@ -42,6 +78,11 @@ const AIAssistantWidget: React.FC<AIAssistantWidgetProps> = ({
   const learningContextId = useSelector(selectors.app.learningContextId);
   const unitUrl = useSelector(selectors.app.unitUrl);
   const blockId = useSelector(selectors.app.blockId);
+  const blockValue = useSelector(selectors.app.blockValue);
+  const problemState = useSelector(selectors.problem.completeState);
+  const showRawEditor = useSelector(selectors.app.showRawEditor);
+  const isMarkdownEditorEnabled = useSelector(selectors.problem.isMarkdownEditorEnabled);
+  const lmsEndpointUrl = useSelector(selectors.app.lmsEndpointUrl);
 
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -170,6 +211,163 @@ const AIAssistantWidget: React.FC<AIAssistantWidgetProps> = ({
   };
 
   /**
+   * Directly get content from editors - same methods as save functionality
+   * This bypasses the getCurrentContent function prop which may return empty
+   */
+  const getContentDirectly = (): string => {
+    // For HTML editor
+    if (blockType === 'html') {
+      try {
+        // Method 1: Access TinyMCE directly via window.tinymce.editors
+        if (window.tinymce?.editors && !showRawEditor) {
+          // Find the text editor (not problem editors)
+          const editors = window.tinymce.editors;
+          for (const editor of Object.values(editors)) {
+            if (editor && typeof (editor as any).getContent === 'function') {
+              const editorId = (editor as any).id || '';
+              // Text editors don't have problem editor prefixes
+              const isProblemEditor = editorId.startsWith('answer') || 
+                                       editorId.startsWith('hint') || 
+                                       editorId.startsWith('selected') || 
+                                       editorId.startsWith('unselected') ||
+                                       editorId.startsWith('group') ||
+                                       editorId === 'question' ||
+                                       editorId === 'explanation';
+              
+              if (!isProblemEditor) {
+                const content = (editor as any).getContent();
+                if (content && typeof content === 'string' && content.trim().length > 0) {
+                  // Apply same transformation as save (setAssetToStaticUrl)
+                  return setAssetToStaticUrl({ editorValue: content, lmsEndpointUrl: lmsEndpointUrl || '' }) || content;
+                }
+              }
+            }
+          }
+        }
+
+        // Method 2: Try to get content from TinyMCE iframe body directly
+        if (!showRawEditor) {
+          const iframes = document.querySelectorAll('iframe[title="Rich Text Area"]');
+          for (const iframe of iframes) {
+            try {
+              const iframeDoc = (iframe as HTMLIFrameElement).contentDocument || 
+                                (iframe as HTMLIFrameElement).contentWindow?.document;
+              if (iframeDoc) {
+                const body = iframeDoc.body;
+                if (body) {
+                  const content = body.innerHTML;
+                  if (content && typeof content === 'string' && content.trim().length > 0) {
+                    return setAssetToStaticUrl({ editorValue: content, lmsEndpointUrl: lmsEndpointUrl || '' }) || content;
+                  }
+                }
+              }
+            } catch (e) {
+              // Cross-origin or other iframe access issues - skip
+              continue;
+            }
+          }
+        }
+
+        // Method 3: Try CodeMirror (raw editor)
+        if (showRawEditor) {
+          // Find CodeMirror editor in DOM
+          const codeMirrorElements = document.querySelectorAll('.CodeMirror');
+          for (const cmEl of codeMirrorElements) {
+            const cm = (cmEl as any).CodeMirror;
+            if (cm && cm.getValue) {
+              const content = cm.getValue();
+              if (content && typeof content === 'string' && content.trim().length > 0) {
+                return setAssetToStaticUrl({ editorValue: content, lmsEndpointUrl: lmsEndpointUrl || '' }) || content;
+              }
+            }
+          }
+        }
+
+        // Method 4: Fallback to Redux state (initial content)
+        if (blockValue?.data?.data) {
+          const initialContent = blockValue.data.data;
+          return typeof initialContent === 'string' ? initialContent : '';
+        }
+      } catch (error) {
+        console.warn('AIAssistantWidget: Error getting HTML content directly:', error);
+      }
+    }
+
+    // For Problem editor
+    if (blockType && blockType !== 'html') {
+      try {
+        // Method 1: Use fetchEditorContent and ReactStateOLXParser (same as save functionality)
+        if (fetchEditorContent && ReactStateOLXParser && problemState) {
+          try {
+            const editorObject = fetchEditorContent({ format: '' });
+            const reactOLXParser = new ReactStateOLXParser({ problem: problemState, editorObject });
+            const olx = reactOLXParser.buildOLX();
+            if (olx && typeof olx === 'string' && olx.trim().length > 0) {
+              return setAssetToStaticUrl({ editorValue: olx, lmsEndpointUrl: lmsEndpointUrl || '' }) || olx;
+            }
+          } catch (parseError) {
+            console.warn('AIAssistantWidget: Error parsing problem state:', parseError);
+          }
+        }
+
+        // Method 2: Direct access to TinyMCE editors for problem (same as fetchEditorContent does)
+        if (window.tinymce?.editors) {
+          try {
+            const editorObject: any = { hints: [] };
+            const EditorsArray = window.tinymce.editors;
+            Object.entries(EditorsArray).forEach(([id, editor]: [string, any]) => {
+              if (Number.isNaN(parseInt(id, 10)) && editor && typeof editor.getContent === 'function') {
+                if (id.startsWith('answer')) {
+                  const answerId = id.substring(id.indexOf('-') + 1);
+                  editorObject.answers = { ...(editorObject.answers || {}), [answerId]: editor.getContent({ format: '' }) };
+                } else if (id === 'question') {
+                  editorObject.question = editor.getContent({ format: '' });
+                } else if (id.startsWith('hint')) {
+                  editorObject.hints = [...(editorObject.hints || []), editor.getContent()];
+                }
+              }
+            });
+            
+            // If we have question content, try to build OLX
+            if (editorObject.question && ReactStateOLXParser && problemState) {
+              try {
+                const reactOLXParser = new ReactStateOLXParser({ problem: problemState, editorObject });
+                const olx = reactOLXParser.buildOLX();
+                if (olx && typeof olx === 'string' && olx.trim().length > 0) {
+                  return setAssetToStaticUrl({ editorValue: olx, lmsEndpointUrl: lmsEndpointUrl || '' }) || olx;
+                }
+              } catch (parseError) {
+                console.warn('AIAssistantWidget: Error building OLX from editor object:', parseError);
+              }
+            }
+          } catch (editorError) {
+            console.warn('AIAssistantWidget: Error accessing TinyMCE editors:', editorError);
+          }
+        }
+
+        // Method 3: Fallback to rawOLX from Redux state
+        if (problemState?.rawOLX && typeof problemState.rawOLX === 'string') {
+          return problemState.rawOLX;
+        }
+      } catch (error) {
+        console.warn('AIAssistantWidget: Error getting problem content directly:', error);
+      }
+    }
+
+    // Final fallback: Try the function prop (might work sometimes)
+    try {
+      const content = getCurrentContent();
+      if (content && typeof content === 'string' && content.trim().length > 0) {
+        return content;
+      }
+    } catch (error) {
+      console.warn('AIAssistantWidget: Error getting content via function prop:', error);
+    }
+
+    return '';
+  };
+
+  /**
    * Handle sending prompt to AI API
    */
   const handleSend = async () => {
@@ -187,7 +385,8 @@ const AIAssistantWidget: React.FC<AIAssistantWidgetProps> = ({
       return;
     }
 
-    const currentContent = getCurrentContent() || '';
+    // Get content directly using the same methods as save functionality
+    const currentContent = getContentDirectly();
 
     // Add user message to chat
     const userMessage = { role: 'user' as const, content: prompt };

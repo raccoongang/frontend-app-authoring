@@ -17,11 +17,12 @@ import { selectors, actions } from '../../../../data/redux';
 import { getDataFromOlx } from '../../../../data/redux/thunkActions/problem';
 import RawEditor from '../../../../sharedComponents/RawEditor';
 import { ProblemTypeKeys } from '../../../../data/constants/problem';
-import AIAssistantWidget from '../../../../sharedComponents/AIAssistantWidget';
+import { ProblemEditorPluginSlot } from '../../../../../plugin-slots/ProblemEditorPluginSlot';
 
 import {
-  checkIfEditorsDirty, parseState, saveWarningModalToggle, getContent,
+  checkIfEditorsDirty, parseState, saveWarningModalToggle, getContent, fetchEditorContent,
 } from './hooks';
+import ReactStateOLXParser from '../../data/ReactStateOLXParser';
 import './index.scss';
 import messages from './messages';
 
@@ -45,6 +46,19 @@ const EditProblemView = ({
   const dispatch = useDispatch();
   const editorRef = useRef(null);
   const isAdvancedProblemType = problemType === ProblemTypeKeys.ADVANCED;
+  
+  // Cache the last known good OLX content - only update when we get non-empty content
+  const cachedOLXRef = useRef(problemState.rawOLX || '');
+  
+  // Create the getContent function that EditorContainer uses (this works for saving)
+  const getContentFn = () => getContent({
+    problemState,
+    openSaveWarningModal,
+    isAdvancedProblemType,
+    isMarkdownEditorEnabled,
+    editorRef,
+    lmsEndpointUrl,
+  });
   const { isSaveWarningModalOpen, openSaveWarningModal, closeSaveWarningModal } = saveWarningModalToggle();
 
   const checkIfDirty = () => {
@@ -119,14 +133,56 @@ const EditProblemView = ({
           </Container>
         ) : (
           <span className="flex-grow-1 mb-5">
-            <AIAssistantWidget
+            <ProblemEditorPluginSlot
               getCurrentContent={() => {
-                // For visual problem editor, we need to get the current OLX
-                return problemState.rawOLX || '';
+                // Use the EXACT same getContent function that EditorContainer uses for saving
+                try {
+                  const contentData = getContentFn();
+                  // getContentFn returns { olx, settings } or null if validation fails
+                  if (contentData && contentData.olx && contentData.olx.trim().length > 0) {
+                    // Got valid non-empty OLX - update cache and return it
+                    cachedOLXRef.current = contentData.olx;
+                    return contentData.olx;
+                  }
+                  
+                  // If we got empty/null content, return cached content (if available)
+                  if (cachedOLXRef.current && cachedOLXRef.current.trim().length > 0) {
+                    return cachedOLXRef.current;
+                  }
+                } catch (error) {
+                  console.warn('Failed to get problem content via getContentFn:', error);
+                }
+                
+                // Fallback: try parseState directly
+                try {
+                  if (window.tinymce?.editors && Object.keys(window.tinymce.editors).length > 0) {
+                    const contentData = parseState({
+                      problem: problemState,
+                      isAdvanced: false,
+                      isMarkdownEditorEnabled,
+                      ref: editorRef,
+                      lmsEndpointUrl,
+                    })();
+                    if (contentData && contentData.olx && contentData.olx.trim().length > 0) {
+                      // Got valid non-empty OLX - update cache and return it
+                      cachedOLXRef.current = contentData.olx;
+                      return contentData.olx;
+                    }
+                  }
+                } catch (parseError) {
+                  console.warn('Failed to get content via parseState:', parseError);
+                }
+                
+                // Final fallback: return cached content or rawOLX
+                return cachedOLXRef.current || problemState.rawOLX || '';
               }}
               updateContent={(newOLX) => {
-                // For visual problem editor, we need to parse the OLX and update the problem state
-                // Use the same logic as initializeProblem to parse and load the problem
+                // Update the cache with new OLX content
+                if (newOLX && typeof newOLX === 'string') {
+                  cachedOLXRef.current = newOLX;
+                }
+                
+                // Parse and update the problem state
                 const rawSettings = {
                   weight: problemState.settings?.scoring?.weight || 1,
                   max_attempts: problemState.settings?.scoring?.attempts?.number || null,
@@ -135,14 +191,12 @@ const EditProblemView = ({
                   rerandomize: problemState.settings?.randomization || null,
                 };
                 
-                // Parse the new OLX and update the problem state
                 const parsedData = getDataFromOlx({
                   rawOLX: newOLX,
                   rawSettings,
                   defaultSettings: defaultSettings || {},
                 });
                 
-                // Update the problem state with parsed data
                 dispatch(actions.problem.load({
                   ...parsedData,
                   rawOLX: newOLX,
