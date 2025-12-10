@@ -4,8 +4,6 @@ import AIAssistantWidget from '../../editors/sharedComponents/AIAssistantWidget'
 
 
 interface TextEditorPluginSlotProps {
-  /** Function to get current editor content */
-  getCurrentContent: () => string;
   /** Function to update editor content with new content */
   updateContent: (content: string) => void;
   /** Block type (e.g., 'html') */
@@ -21,12 +19,10 @@ interface TextEditorPluginSlotProps {
  * in the HTML/text editor. By default, it includes the AIAssistantWidget.
  * 
  * Plugin Props:
- * - `getCurrentContent`: Function to get current editor content
  * - `updateContent`: Function to update editor content with new content
  * - `blockType`: Block type (e.g., 'html')
  */
 export const TextEditorPluginSlot: React.FC<TextEditorPluginSlotProps> = ({
-  getCurrentContent,
   updateContent,
   blockType,
 }) => (
@@ -34,13 +30,11 @@ export const TextEditorPluginSlot: React.FC<TextEditorPluginSlotProps> = ({
     id="org.openedx.frontend.authoring.text_editor_plugin.v1"
     idAliases={['text_editor_plugin_slot']}
     pluginProps={{
-      getCurrentContent,
       updateContent,
       blockType,
     }}
   >
     <AIAssistantWidget
-      getCurrentContent={getCurrentContent}
       updateContent={updateContent}
       blockType={blockType}
     />

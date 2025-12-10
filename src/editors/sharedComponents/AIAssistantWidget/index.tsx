@@ -50,8 +50,6 @@ try {
 }
 
 interface AIAssistantWidgetProps {
-  /** Function to get current editor content */
-  getCurrentContent: () => string;
   /** Function to update editor content with new content */
   updateContent: (content: string) => void;
   /** Block type (e.g., 'html', 'problem-single-select') */
@@ -62,7 +60,6 @@ interface AIAssistantWidgetProps {
  * AI Assistant Widget for generating xBlock content using AI
  */
 const AIAssistantWidget: React.FC<AIAssistantWidgetProps> = ({
-  getCurrentContent,
   updateContent,
   blockType,
 }) => {
@@ -354,16 +351,6 @@ const AIAssistantWidget: React.FC<AIAssistantWidgetProps> = ({
       }
     }
 
-    // Final fallback: Try the function prop (might work sometimes)
-    try {
-      const content = getCurrentContent();
-      if (content && typeof content === 'string' && content.trim().length > 0) {
-        return content;
-      }
-    } catch (error) {
-      console.warn('AIAssistantWidget: Error getting content via function prop:', error);
-    }
-
     return '';
   };
 
@@ -573,4 +560,3 @@ const AIAssistantWidget: React.FC<AIAssistantWidgetProps> = ({
 };
 
 export default AIAssistantWidget;
-

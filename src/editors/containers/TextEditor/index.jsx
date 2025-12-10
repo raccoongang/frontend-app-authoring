@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -43,8 +43,6 @@ const TextEditor = ({
     learningContextId,
   });
   const editorContent = newContent || initialContent;
-  // Cache the last known good content - only update when we get non-empty content
-  const cachedContentRef = useRef(initialContent);
   let staticRootUrl;
   if (isLibrary) {
     staticRootUrl = `${getConfig().STUDIO_BASE_URL }/library_assets/blocks/${ blockId }/`;
@@ -103,34 +101,7 @@ const TextEditor = ({
           ) : (
             <>
               <TextEditorPluginSlot
-                getCurrentContent={() => {
-                  try {
-                    const content = hooks.getContent({ editorRef, showRawEditor })();
-
-                    // Only update cache if we got non-empty content
-                    if (content && typeof content === 'string' && content.trim().length > 0) {
-                      cachedContentRef.current = content;
-                      return content;
-                    }
-
-                    // If we got empty content, return cached content (if available)
-                    if (cachedContentRef.current && cachedContentRef.current.trim().length > 0) {
-                      return cachedContentRef.current;
-                    }
-                  } catch (error) {
-                    console.warn('Failed to get content via hooks.getContent:', error);
-                  }
-
-
-                  // Final fallback: return cached content or initial content
-                  return cachedContentRef.current || initialContent || '';
-                }}
                 updateContent={(newContent) => {
-                  // Update the cache with new content
-                  if (newContent && typeof newContent === 'string') {
-                    cachedContentRef.current = newContent;
-                  }
-                  
                   // Update the editor
                   if (showRawEditor && editorRef?.current) {
                     const transaction = editorRef.current.state.update({

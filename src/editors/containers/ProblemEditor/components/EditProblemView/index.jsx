@@ -19,10 +19,7 @@ import RawEditor from '../../../../sharedComponents/RawEditor';
 import { ProblemTypeKeys } from '../../../../data/constants/problem';
 import { ProblemEditorPluginSlot } from '../../../../../plugin-slots/ProblemEditorPluginSlot';
 
-import {
-  checkIfEditorsDirty, parseState, saveWarningModalToggle, getContent, fetchEditorContent,
-} from './hooks';
-import ReactStateOLXParser from '../../data/ReactStateOLXParser';
+import {checkIfEditorsDirty, parseState, saveWarningModalToggle, getContent} from './hooks';
 import './index.scss';
 import messages from './messages';
 
@@ -46,19 +43,6 @@ const EditProblemView = ({
   const dispatch = useDispatch();
   const editorRef = useRef(null);
   const isAdvancedProblemType = problemType === ProblemTypeKeys.ADVANCED;
-  
-  // Cache the last known good OLX content - only update when we get non-empty content
-  const cachedOLXRef = useRef(problemState.rawOLX || '');
-  
-  // Create the getContent function that EditorContainer uses (this works for saving)
-  const getContentFn = () => getContent({
-    problemState,
-    openSaveWarningModal,
-    isAdvancedProblemType,
-    isMarkdownEditorEnabled,
-    editorRef,
-    lmsEndpointUrl,
-  });
   const { isSaveWarningModalOpen, openSaveWarningModal, closeSaveWarningModal } = saveWarningModalToggle();
 
   const checkIfDirty = () => {
@@ -134,54 +118,7 @@ const EditProblemView = ({
         ) : (
           <span className="flex-grow-1 mb-5">
             <ProblemEditorPluginSlot
-              getCurrentContent={() => {
-                // Use the EXACT same getContent function that EditorContainer uses for saving
-                try {
-                  const contentData = getContentFn();
-                  // getContentFn returns { olx, settings } or null if validation fails
-                  if (contentData && contentData.olx && contentData.olx.trim().length > 0) {
-                    // Got valid non-empty OLX - update cache and return it
-                    cachedOLXRef.current = contentData.olx;
-                    return contentData.olx;
-                  }
-                  
-                  // If we got empty/null content, return cached content (if available)
-                  if (cachedOLXRef.current && cachedOLXRef.current.trim().length > 0) {
-                    return cachedOLXRef.current;
-                  }
-                } catch (error) {
-                  console.warn('Failed to get problem content via getContentFn:', error);
-                }
-                
-                // Fallback: try parseState directly
-                try {
-                  if (window.tinymce?.editors && Object.keys(window.tinymce.editors).length > 0) {
-                    const contentData = parseState({
-                      problem: problemState,
-                      isAdvanced: false,
-                      isMarkdownEditorEnabled,
-                      ref: editorRef,
-                      lmsEndpointUrl,
-                    })();
-                    if (contentData && contentData.olx && contentData.olx.trim().length > 0) {
-                      // Got valid non-empty OLX - update cache and return it
-                      cachedOLXRef.current = contentData.olx;
-                      return contentData.olx;
-                    }
-                  }
-                } catch (parseError) {
-                  console.warn('Failed to get content via parseState:', parseError);
-                }
-                
-                // Final fallback: return cached content or rawOLX
-                return cachedOLXRef.current || problemState.rawOLX || '';
-              }}
               updateContent={(newOLX) => {
-                // Update the cache with new OLX content
-                if (newOLX && typeof newOLX === 'string') {
-                  cachedOLXRef.current = newOLX;
-                }
-                
                 // Parse and update the problem state
                 const rawSettings = {
                   weight: problemState.settings?.scoring?.weight || 1,
