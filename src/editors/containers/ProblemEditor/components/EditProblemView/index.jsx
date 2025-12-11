@@ -13,13 +13,13 @@ import AnswerWidget from './AnswerWidget';
 import SettingsWidget from './SettingsWidget';
 import QuestionWidget from './QuestionWidget';
 import EditorContainer from '../../../EditorContainer';
-import { selectors } from '../../../../data/redux';
+import { selectors, actions } from '../../../../data/redux';
+import { getDataFromOlx } from '../../../../data/redux/thunkActions/problem';
 import RawEditor from '../../../../sharedComponents/RawEditor';
 import { ProblemTypeKeys } from '../../../../data/constants/problem';
+import { ProblemEditorPluginSlot } from '../../../../../plugin-slots/ProblemEditorPluginSlot';
 
-import {
-  checkIfEditorsDirty, parseState, saveWarningModalToggle, getContent,
-} from './hooks';
+import {checkIfEditorsDirty, parseState, saveWarningModalToggle, getContent} from './hooks';
 import './index.scss';
 import messages from './messages';
 
@@ -36,6 +36,7 @@ const EditProblemView = ({
   returnUrl,
   analytics,
   isDirty,
+  defaultSettings,
   // injected
   intl,
 }) => {
@@ -116,6 +117,32 @@ const EditProblemView = ({
           </Container>
         ) : (
           <span className="flex-grow-1 mb-5">
+            <ProblemEditorPluginSlot
+              updateContent={(newOLX) => {
+                // Parse and update the problem state
+                const rawSettings = {
+                  weight: problemState.settings?.scoring?.weight || 1,
+                  max_attempts: problemState.settings?.scoring?.attempts?.number || null,
+                  showanswer: problemState.settings?.showAnswer?.on || null,
+                  show_reset_button: problemState.settings?.showResetButton || null,
+                  rerandomize: problemState.settings?.randomization || null,
+                };
+                
+                const parsedData = getDataFromOlx({
+                  rawOLX: newOLX,
+                  rawSettings,
+                  defaultSettings: defaultSettings || {},
+                });
+                
+                dispatch(actions.problem.load({
+                  ...parsedData,
+                  rawOLX: newOLX,
+                  rawMarkdown: problemState.rawMarkdown,
+                  isMarkdownEditorEnabled,
+                }));
+              }}
+              blockType={problemType || 'problem'}
+            />
             <QuestionWidget />
             <ExplanationWidget />
             <AnswerWidget problemType={problemType} />
@@ -145,6 +172,7 @@ EditProblemView.propTypes = {
   returnUrl: PropTypes.string.isRequired,
   isDirty: PropTypes.bool,
   isMarkdownEditorEnabled: PropTypes.bool,
+  defaultSettings: PropTypes.object,
   // injected
   intl: intlShape.isRequired,
 };
@@ -158,6 +186,7 @@ export const mapStateToProps = (state) => ({
    && selectors.app.isMarkdownEditorEnabledForCourse(state),
   problemState: selectors.problem.completeState(state),
   isDirty: selectors.problem.isDirty(state),
+  defaultSettings: selectors.problem.defaultSettings(state) || {},
 });
 
 export const EditProblemViewInternal = EditProblemView; // For testing only
