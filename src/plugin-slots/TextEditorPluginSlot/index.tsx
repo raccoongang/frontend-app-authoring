@@ -1,7 +1,5 @@
 import { PluginSlot } from '@openedx/frontend-plugin-framework/dist';
 import React from 'react';
-import AIAssistantWidget from '../../editors/sharedComponents/AIAssistantWidget';
-
 
 interface TextEditorPluginSlotProps {
   /** Function to update editor content with new content */
@@ -15,8 +13,8 @@ interface TextEditorPluginSlotProps {
  * 
  * Slot ID: `org.openedx.frontend.authoring.text_editor_plugin.v1`
  * 
- * This slot allows plugins to extend or replace the AI Content Assistant widget
- * in the HTML/text editor. By default, it includes the AIAssistantWidget.
+ * This slot allows plugins to add custom widgets to the HTML/text editor.
+ * By default, the slot is empty. Add widgets via `env.config.jsx`.
  * 
  * Plugin Props:
  * - `updateContent`: Function to update editor content with new content
@@ -33,11 +31,6 @@ export const TextEditorPluginSlot: React.FC<TextEditorPluginSlotProps> = ({
       updateContent,
       blockType,
     }}
-  >
-    <AIAssistantWidget
-      updateContent={updateContent}
-      blockType={blockType}
-    />
-  </PluginSlot>
+  />
 );
 
