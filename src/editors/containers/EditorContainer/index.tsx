@@ -28,12 +28,14 @@ interface WrapperProps {
   children: React.ReactNode;
 }
 
-export const EditorModalWrapper: React.FC<WrapperProps & { onClose: () => void }> = ({ children, onClose }) => {
+type ModalDialogSize = 'lg' | 'sm' | 'xl' | 'md' | 'fullscreen';
+
+export const EditorModalWrapper: React.FC<WrapperProps & { onClose: () => void, size?: ModalDialogSize, className?: string }> = ({ children, onClose, size = 'xl', className }) => {
   const intl = useIntl();
 
   const title = intl.formatMessage(messages.modalTitle);
   return (
-    <ModalDialog isOpen size="xl" isOverflowVisible={false} onClose={onClose} title={title}>{children}</ModalDialog>
+    <ModalDialog isOpen className={className} size={size} isOverflowVisible={false} onClose={onClose} title={title}>{children}</ModalDialog>
   );
 };
 
@@ -47,6 +49,8 @@ interface Props extends EditorComponent {
   getContent: Function;
   isDirty: () => boolean;
   validateEntry?: Function | null;
+  size?: ModalDialogSize;
+  className?: string;
 }
 
 const EditorContainer: React.FC<Props> = ({
@@ -56,6 +60,8 @@ const EditorContainer: React.FC<Props> = ({
   onClose = null,
   validateEntry = null,
   returnFunction = null,
+  size,
+  className,
 }) => {
   const intl = useIntl();
   const dispatch = useDispatch();
@@ -98,7 +104,7 @@ const EditorContainer: React.FC<Props> = ({
     }
   };
   return (
-    <EditorModalWrapper onClose={confirmCancelIfDirty}>
+    <EditorModalWrapper onClose={confirmCancelIfDirty} size={size} className={className}>
       {createFailed && (
         <Toast show onClose={clearCreateFailed}>
           {parseErrorMsg(

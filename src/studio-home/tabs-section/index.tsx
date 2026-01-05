@@ -7,6 +7,7 @@ import {
   Tab,
   Tabs,
 } from '@openedx/paragon';
+import { getAuthenticatedUser } from '@edx/frontend-platform/auth';
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -32,12 +33,14 @@ const TabsSection = ({
   const intl = useIntl();
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const { administrator: isGlobalStaff } = getAuthenticatedUser();
   const TABS_LIST = {
     courses: 'courses',
     libraries: 'libraries',
     legacyLibraries: 'legacyLibraries',
     archived: 'archived',
     taxonomies: 'taxonomies',
+    assetsLibrary: 'assetsLibrary',
   } as const;
 
   const initTabKeyState = (pname) => {
@@ -167,6 +170,16 @@ const TabsSection = ({
       );
     }
 
+    if (isGlobalStaff) {
+      tabs.push(
+        <Tab
+          key={TABS_LIST.assetsLibrary}
+          eventKey={TABS_LIST.assetsLibrary}
+          title={intl.formatMessage(messages.assetsLibraryTabTitle)}
+        />,
+      );
+    }
+
     return tabs;
   }, [archivedCourses, showNewCourseContainer, isLoadingCourses, isLoadingLibraries]);
 
@@ -180,6 +193,9 @@ const TabsSection = ({
       navigate('/libraries');
     } else if (tab === TABS_LIST.taxonomies) {
       navigate('/taxonomies');
+    } else if (tab === TABS_LIST.assetsLibrary) {
+      window.location.href = `${getConfig().STUDIO_BASE_URL}/assets-library/redirect/`;
+      return;
     }
     setTabKey(tab);
   };

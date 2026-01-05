@@ -88,6 +88,10 @@ const messages = defineMessages({
     id: 'course-authoring.studio-home.libraries.tab.library.not.found.alert.message',
     defaultMessage: 'There are no libraries with the current filters.',
   },
+  assetsLibraryTabTitle: {
+    id: 'course-authoring.studio-home.assetsLibrary.tab.title',
+    defaultMessage: 'Asset Library',
+  },
 });
 
 export default messages;

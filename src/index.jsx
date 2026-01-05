@@ -11,6 +11,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query';
+import { AssetsListPage } from '@jigsaw-plugins/frontend-app-assets-library';
 
 import { initializeHotjar } from '@edx/frontend-enterprise-hotjar';
 import { logError } from '@edx/frontend-platform/logging';
@@ -94,6 +95,7 @@ const App = () => {
             />
           </>
         )}
+        <Route path="/assets-library/general-library" element={<AssetsListPage />} />
       </Route>,
     ),
     {
