@@ -1,5 +1,5 @@
 import {
-  useRef, useEffect, useMemo, useCallback, useReducer,
+  useRef, useEffect, useMemo, useCallback, useReducer, useState
 } from 'react';
 import classNames from 'classnames';
 import { connect } from 'react-redux';
@@ -36,7 +36,7 @@ import {
   MENUS,
 } from './constants';
 import { getColorOptions } from './utils';
-import { AssetBlock, TextBlock, ShapeBlock } from './blocks';
+import { AssetBlock, TextBlock, ShapeBlock, TeacherNotesEditor } from './blocks';
 import messages from './messages';
 
 import 'tinymce/tinymce';
@@ -44,6 +44,7 @@ import 'tinymce/icons/default';
 import 'tinymce/themes/silver';
 import 'tinymce/plugins/lists';
 import 'tinymce/plugins/textcolor';
+import 'tinymce/plugins/link';
 import 'tinymce/skins/ui/oxide/skin.min.css';
 import 'tinymce/skins/content/default/content.min.css';
 
@@ -144,7 +145,23 @@ const SlideEditor = ({
   } = useBlockTransformManager({ slideRef, updateBlock, activeBlockId });
 
   const toolbarDisabled = !activeBlock;
-  const getContent = useCallback(() => ({ blocks }), [blocks]);
+
+  const [teacherNotes, setTeacherNotes] = useState(() => (
+    blockValue?.data?.metadata?.teacher_notes ?? ''
+  ));
+
+  useEffect(() => {
+    setTeacherNotes(blockValue?.data?.metadata?.teacher_notes ?? '');
+  }, [blockValue]);
+
+  const getContent = useCallback(
+    () => ({
+      ...blockValue?.data?.metadata,
+      blocks,
+      teacher_notes: teacherNotes,
+    }),
+    [blockValue, blocks, teacherNotes],
+  );
 
   const handleShapeColorChange = useCallback((color) => {
     if (!activeBlockId) {
@@ -453,14 +470,10 @@ const SlideEditor = ({
                 </Col>
                 <Col xs={4} className="px-0">
                   <div className="slide-notes h-100">
-                    <div className="slide-notes-top" />
-                    <div className="slide-notes-text h-100">
-                      <Form.Control
-                        as="textarea"
-                        floatingLabel="Enter teacher’s notes..."
-                        className="slide-notes-textarea h-100 m-0"
-                      />
-                    </div>
+                    <TeacherNotesEditor
+                      value={teacherNotes}
+                      onChange={setTeacherNotes}
+                    />
                   </div>
                 </Col>
               </Row>

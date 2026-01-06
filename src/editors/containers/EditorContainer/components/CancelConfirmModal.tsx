@@ -17,6 +17,7 @@ const CancelConfirmModal = ({
   const intl = useIntl();
   return (
     <BaseModal
+      isBlocking
       size="lg"
       footerAction={(
         <Button
