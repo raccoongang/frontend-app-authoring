@@ -374,10 +374,8 @@
   max-height: stretch;
 }
 
-.tox.tox-tinymce-aux,
-.tox .tox-dialog-wrap,
-.tox .tox-dialog-wrap__backdrop {
-  z-index: 99999 !important;
+.tox :not(svg):not(rect) .tox-dialog {
+  background-color: var(--pgn-color-white);
 }
 
 /* ensure TinyMCE dialog receives pointer events */
