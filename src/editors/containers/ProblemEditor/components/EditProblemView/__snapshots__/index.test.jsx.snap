@@ -206,6 +206,9 @@ exports[`EditorProblemView component renders simple view 1`] = `
     <span
       className="flex-grow-1 mb-5"
     >
+      <mockConstructor
+        blockType="multiplechoiceresponse"
+      />
       <injectIntl(ShimmedIntlComponent) />
       <injectIntl(ShimmedIntlComponent) />
       <injectIntl(ShimmedIntlComponent)

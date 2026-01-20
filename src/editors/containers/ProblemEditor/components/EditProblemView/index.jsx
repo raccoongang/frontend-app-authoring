@@ -15,7 +15,9 @@ import QuestionWidget from './QuestionWidget';
 import EditorContainer from '../../../EditorContainer';
 import { selectors } from '../../../../data/redux';
 import RawEditor from '../../../../sharedComponents/RawEditor';
+import { ProblemEditorPluginSlot } from '../../../../../plugin-slots/ProblemEditorPluginSlot';
 import { ProblemTypeKeys } from '../../../../data/constants/problem';
+import { blockTypes } from '../../../../data/constants/app';
 
 import {
   checkIfEditorsDirty, parseState, saveWarningModalToggle, getContent,
@@ -116,6 +118,7 @@ const EditProblemView = ({
           </Container>
         ) : (
           <span className="flex-grow-1 mb-5">
+            <ProblemEditorPluginSlot blockType={problemType || blockTypes.problem} />
             <QuestionWidget />
             <ExplanationWidget />
             <AnswerWidget problemType={problemType} />
