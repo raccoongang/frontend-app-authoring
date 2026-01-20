@@ -38,30 +38,35 @@ exports[`TextEditor snapshots block failed to load, Toast is shown 1`] = `
     >
       Error: Could Not Load Text Content
     </Toast>
-    <TinyMceWidget
-      disabled={false}
-      editorContentHtml="eDiTablE Text"
-      editorRef={
-        {
-          "current": {
-            "value": "something",
-          },
+    <Fragment>
+      <mockConstructor
+        blockType="html"
+      />
+      <TinyMceWidget
+        disabled={false}
+        editorContentHtml="eDiTablE Text"
+        editorRef={
+          {
+            "current": {
+              "value": "something",
+            },
+          }
         }
-      }
-      editorType="text"
-      enableImageUpload={true}
-      id={null}
-      images={{}}
-      initializeEditor={[MockFunction args.intializeEditor]}
-      isLibrary={null}
-      learningContextId="course+org+run"
-      lmsEndpointUrl=""
-      maxHeight={500}
-      minHeight={500}
-      onChange={[Function]}
-      setEditorRef={[MockFunction hooks.prepareEditorRef.setEditorRef]}
-      studioEndpointUrl=""
-    />
+        editorType="text"
+        enableImageUpload={true}
+        id={null}
+        images={{}}
+        initializeEditor={[MockFunction args.intializeEditor]}
+        isLibrary={null}
+        learningContextId="course+org+run"
+        lmsEndpointUrl=""
+        maxHeight={500}
+        minHeight={500}
+        onChange={[Function]}
+        setEditorRef={[MockFunction hooks.prepareEditorRef.setEditorRef]}
+        studioEndpointUrl=""
+      />
+    </Fragment>
   </div>
 </EditorContainer>
 `;
@@ -104,23 +109,28 @@ exports[`TextEditor snapshots loaded, raw editor 1`] = `
     >
       Error: Could Not Load Text Content
     </Toast>
-    <RawEditor
-      content={
-        {
-          "data": {
-            "data": "eDiTablE Text",
-          },
+    <Fragment>
+      <mockConstructor
+        blockType="html"
+      />
+      <RawEditor
+        content={
+          {
+            "data": {
+              "data": "eDiTablE Text",
+            },
+          }
         }
-      }
-      editorRef={
-        {
-          "current": {
-            "value": "something",
-          },
+        editorRef={
+          {
+            "current": {
+              "value": "something",
+            },
+          }
         }
-      }
-      lang="html"
-    />
+        lang="html"
+      />
+    </Fragment>
   </div>
 </EditorContainer>
 `;
@@ -214,30 +224,35 @@ exports[`TextEditor snapshots renders as expected with default behavior 1`] = `
     >
       Error: Could Not Load Text Content
     </Toast>
-    <TinyMceWidget
-      disabled={false}
-      editorContentHtml="eDiTablE Text"
-      editorRef={
-        {
-          "current": {
-            "value": "something",
-          },
+    <Fragment>
+      <mockConstructor
+        blockType="html"
+      />
+      <TinyMceWidget
+        disabled={false}
+        editorContentHtml="eDiTablE Text"
+        editorRef={
+          {
+            "current": {
+              "value": "something",
+            },
+          }
         }
-      }
-      editorType="text"
-      enableImageUpload={true}
-      id={null}
-      images={{}}
-      initializeEditor={[MockFunction args.intializeEditor]}
-      isLibrary={null}
-      learningContextId="course+org+run"
-      lmsEndpointUrl=""
-      maxHeight={500}
-      minHeight={500}
-      onChange={[Function]}
-      setEditorRef={[MockFunction hooks.prepareEditorRef.setEditorRef]}
-      studioEndpointUrl=""
-    />
+        editorType="text"
+        enableImageUpload={true}
+        id={null}
+        images={{}}
+        initializeEditor={[MockFunction args.intializeEditor]}
+        isLibrary={null}
+        learningContextId="course+org+run"
+        lmsEndpointUrl=""
+        maxHeight={500}
+        minHeight={500}
+        onChange={[Function]}
+        setEditorRef={[MockFunction hooks.prepareEditorRef.setEditorRef]}
+        studioEndpointUrl=""
+      />
+    </Fragment>
   </div>
 </EditorContainer>
 `;
@@ -280,30 +295,35 @@ exports[`TextEditor snapshots renders static images with relative paths 1`] = `
     >
       Error: Could Not Load Text Content
     </Toast>
-    <TinyMceWidget
-      disabled={false}
-      editorContentHtml="eDiTablE Text with <img src="/asset+org+run+type@asset+block@img.jpg" />"
-      editorRef={
-        {
-          "current": {
-            "value": "something",
-          },
+    <Fragment>
+      <mockConstructor
+        blockType="html"
+      />
+      <TinyMceWidget
+        disabled={false}
+        editorContentHtml="eDiTablE Text with <img src="/asset+org+run+type@asset+block@img.jpg" />"
+        editorRef={
+          {
+            "current": {
+              "value": "something",
+            },
+          }
         }
-      }
-      editorType="text"
-      enableImageUpload={true}
-      id={null}
-      images={{}}
-      initializeEditor={[MockFunction args.intializeEditor]}
-      isLibrary={null}
-      learningContextId="course+org+run"
-      lmsEndpointUrl=""
-      maxHeight={500}
-      minHeight={500}
-      onChange={[Function]}
-      setEditorRef={[MockFunction hooks.prepareEditorRef.setEditorRef]}
-      studioEndpointUrl=""
-    />
+        editorType="text"
+        enableImageUpload={true}
+        id={null}
+        images={{}}
+        initializeEditor={[MockFunction args.intializeEditor]}
+        isLibrary={null}
+        learningContextId="course+org+run"
+        lmsEndpointUrl=""
+        maxHeight={500}
+        minHeight={500}
+        onChange={[Function]}
+        setEditorRef={[MockFunction hooks.prepareEditorRef.setEditorRef]}
+        studioEndpointUrl=""
+      />
+    </Fragment>
   </div>
 </EditorContainer>
 `;
