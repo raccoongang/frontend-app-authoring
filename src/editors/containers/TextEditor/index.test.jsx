@@ -21,7 +21,7 @@ jest.mock('@tinymce/tinymce-react', () => {
 jest.mock('../EditorContainer', () => 'EditorContainer');
 
 jest.mock('../../../plugin-slots/TextEditorPluginSlot', () => ({
-  TextEditorPluginSlot: () => null,
+  TextEditorPluginSlot: jest.fn(() => null),
 }));
 
 jest.mock('./hooks', () => ({

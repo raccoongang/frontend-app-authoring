@@ -7,8 +7,8 @@ import { ProblemTypeKeys } from '../../../../data/constants/problem';
 import RawEditor from '../../../../sharedComponents/RawEditor';
 import { formatMessage } from '../../../../testUtils';
 
-jest.mock('../../../../plugin-slots/ProblemEditorPluginSlot', () => ({
-  ProblemEditorPluginSlot: () => null,
+jest.mock('../../../../../plugin-slots/ProblemEditorPluginSlot', () => ({
+  ProblemEditorPluginSlot: jest.fn(() => null),
 }));
 
 describe('EditorProblemView component', () => {
