@@ -9,6 +9,28 @@ and this project adheres to customized Semantic Versioning e.g.: `teak-rg.1`
 [Unreleased]
 ************
 
+
+[release/teak-rg.4] - 2026-02-27
+================================
+
+Maintenance:
+============
+* Rebased on upstream/release/teak.3
+
+[release/teak-rg.3] - 2025-09-09
+********************************
+
+Added:
+======
+* Implement HTML and Problem editors plugin slots
+
+Fixed:
+======
+* Loading unit page directly from link after logging in in Teak
+* Load sequences in unit page
+
+[release/teak-rg.2]
+*******************
 [release/teak-rg.1] - 2025-08-06
 ********************************
 
