@@ -1,13 +1,13 @@
 import { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getConfig } from '@edx/frontend-platform';
 import { useIntl, FormattedMessage } from '@edx/frontend-platform/i18n';
 import {
   ActionRow, Button, StandardModal, useToggle,
 } from '@openedx/paragon';
 
-import { getCourseSectionVertical } from '../data/selectors';
+import { getCourseSectionVertical, getCourseUnitData } from '../data/selectors';
 import { getWaffleFlags } from '../../data/selectors';
 import { COMPONENT_TYPES } from '../../generic/block-type-utils/constants';
 import ComponentModalView from './add-component-modals/ComponentModalView';
@@ -19,6 +19,7 @@ import { useIframe } from '../../generic/hooks/context/hooks';
 import { useEventListener } from '../../generic/hooks';
 import VideoSelectorPage from '../../editors/VideoSelectorPage';
 import EditorPage from '../../editors/EditorPage';
+import { fetchCourseSectionVerticalData } from '../data/thunk';
 
 const AddComponent = ({
   parentLocator,
@@ -28,6 +29,8 @@ const AddComponent = ({
   handleCreateNewCourseXBlock,
 }) => {
   const intl = useIntl();
+  const dispatch = useDispatch();
+
   const [isOpenAdvanced, openAdvanced, closeAdvanced] = useToggle(false);
   const [isOpenHtml, openHtml, closeHtml] = useToggle(false);
   const [isOpenOpenAssessment, openOpenAssessment, closeOpenAssessment] = useToggle(false);
@@ -45,6 +48,9 @@ const AddComponent = ({
   const [usageId, setUsageId] = useState(null);
   const { sendMessageToIframe } = useIframe();
   const { useVideoGalleryFlow, useReactMarkdownEditor } = useSelector(getWaffleFlags);
+
+  const courseUnit = useSelector(getCourseUnitData);
+  const sequenceId = courseUnit?.ancestorInfo?.ancestors?.[0]?.id;
 
   const receiveMessage = useCallback(({ data: { type, payload } }) => {
     if (type === messageTypes.showMultipleComponentPicker) {
@@ -67,7 +73,15 @@ const AddComponent = ({
     closeXBlockEditorModal();
     closeVideoSelectorModal();
     sendMessageToIframe(messageTypes.refreshXBlock, null);
+    dispatch(fetchCourseSectionVerticalData(blockId, sequenceId));
   }, [closeXBlockEditorModal, closeVideoSelectorModal, sendMessageToIframe]);
+
+  const onXBlockCancel = useCallback(/* istanbul ignore next */ () => {
+    // ignoring tests because it triggers when someone closes the editor which has a separate store
+    closeXBlockEditorModal();
+    closeVideoSelectorModal();
+    dispatch(fetchCourseSectionVerticalData(blockId, sequenceId));
+  }, [closeXBlockEditorModal, closeVideoSelectorModal, sendMessageToIframe, blockId, sequenceId]);
 
   const handleLibraryV2Selection = useCallback((selection) => {
     handleCreateNewCourseXBlock({
@@ -261,7 +275,7 @@ const AddComponent = ({
               isMarkdownEditorEnabledForCourse={useReactMarkdownEditor}
               studioEndpointUrl={getConfig().STUDIO_BASE_URL}
               lmsEndpointUrl={getConfig().LMS_BASE_URL}
-              onClose={closeXBlockEditorModal}
+              onClose={onXBlockCancel}
               returnFunction={/* istanbul ignore next */ () => onXBlockSave}
             />
           </div>
