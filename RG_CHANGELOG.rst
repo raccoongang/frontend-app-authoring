@@ -9,6 +9,11 @@ and this project adheres to customized Semantic Versioning e.g.: `verawood-rg.1`
 [Unreleased]
 ************
 
+Fixed:
+======
+* Course outline no longer scrolls back to the highlighted block on every interaction when opened through a ``?show=`` link (VERA-41).
+  Drop this patch once `#3213 <https://github.com/openedx/frontend-app-authoring/pull/3213>`_ and `#3214 <https://github.com/openedx/frontend-app-authoring/pull/3214>`_ are merged upstream.
+
 Added:
 ======
 * ``TextEditorPluginSlot`` and ``ProblemEditorPluginSlot`` so plugins can inject UI into the HTML and Problem editors (AILab-146)
