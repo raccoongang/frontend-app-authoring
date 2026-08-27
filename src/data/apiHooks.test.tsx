@@ -134,7 +134,7 @@ const CounterComponent = () => {
         <button
           type="button"
           onClick={() => {
-            resetData();
+            void resetData();
           }}
         >
           reset
