@@ -17,3 +17,8 @@ Added:
 Removed:
 ========
 * codecov CI action, and the ``coverage`` job left with nothing to do — the fork has no codecov project, so the step failed every run (VERA-6)
+
+Fixed:
+======
+* Image gallery sort control: the missing space in its label, and its menu spilling out of the modal (VERA-40).
+  Drop once `frontend-app-authoring#3219 <https://github.com/openedx/frontend-app-authoring/pull/3219>`_ (master) and `frontend-app-authoring#3220 <https://github.com/openedx/frontend-app-authoring/pull/3220>`_ (release/verawood) are merged upstream.
