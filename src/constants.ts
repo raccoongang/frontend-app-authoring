@@ -82,6 +82,8 @@ export const REGEX_RULES = {
   noSpaceRule: /^\S*$/,
 };
 
+export const ADVANCED_EDITOR_MIN_HEIGHT = '70vh';
+
 /**
  * Feature policy for iframe, allowing access to certain courseware-related media.
  *
@@ -92,8 +94,6 @@ export const REGEX_RULES = {
  * This policy was selected in conference with the edX Security Working Group.
  * Changes to it should be vetted by them (security@edx.org).
  */
-export const ADVANCED_EDITOR_MIN_HEIGHT = '70vh';
-
 export const IFRAME_FEATURE_POLICY =
   'microphone *; camera *; midi *; geolocation *; encrypted-media *; clipboard-write *';
 

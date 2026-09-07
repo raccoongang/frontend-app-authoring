@@ -9,11 +9,6 @@ and this project adheres to customized Semantic Versioning e.g.: `verawood-rg.1`
 [Unreleased]
 ************
 
-Fixed:
-======
-* Fullscreen component editors now fill the modal — the text editor no longer stops short of the footer, and an advanced block no longer leaves empty space below it (VERA-38).
-  Drop this patch once `#3211 <https://github.com/openedx/frontend-app-authoring/pull/3211>`_ and `#3212 <https://github.com/openedx/frontend-app-authoring/pull/3212>`_ are merged upstream.
-
 Added:
 ======
 * ``TextEditorPluginSlot`` and ``ProblemEditorPluginSlot`` so plugins can inject UI into the HTML and Problem editors (AILab-146)
@@ -22,3 +17,8 @@ Added:
 Removed:
 ========
 * codecov CI action, and the ``coverage`` job left with nothing to do — the fork has no codecov project, so the step failed every run (VERA-6)
+
+Fixed:
+======
+* Fullscreen component editors now fill the modal — the text editor no longer stops short of the footer, and an advanced block no longer leaves empty space below it (VERA-38).
+  Drop this patch once `#3211 <https://github.com/openedx/frontend-app-authoring/pull/3211>`_ and `#3212 <https://github.com/openedx/frontend-app-authoring/pull/3212>`_ are merged upstream.
