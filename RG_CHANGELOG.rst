@@ -25,5 +25,7 @@ Removed:
 
 Fixed:
 ======
+* Image gallery sort control: the missing space in its label, and its menu spilling out of the modal (VERA-40).
+  Drop once `frontend-app-authoring#3219 <https://github.com/openedx/frontend-app-authoring/pull/3219>`_ (master) and `frontend-app-authoring#3220 <https://github.com/openedx/frontend-app-authoring/pull/3220>`_ (release/verawood) are merged upstream.
 * Fullscreen component editors now fill the modal — the text editor no longer stops short of the footer, and an advanced block no longer leaves empty space below it (VERA-38).
   Drop this patch once `#3211 <https://github.com/openedx/frontend-app-authoring/pull/3211>`_ and `#3212 <https://github.com/openedx/frontend-app-authoring/pull/3212>`_ are merged upstream.
