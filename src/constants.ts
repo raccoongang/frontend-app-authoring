@@ -82,6 +82,8 @@ export const REGEX_RULES = {
   noSpaceRule: /^\S*$/,
 };
 
+export const ADVANCED_EDITOR_MIN_HEIGHT = '70vh';
+
 /**
  * Feature policy for iframe, allowing access to certain courseware-related media.
  *
