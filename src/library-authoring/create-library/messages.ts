@@ -58,6 +58,11 @@ const messages = defineMessages({
     defaultMessage: 'Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or hyphens.',
     description: 'Text to display when slug id has invalid symbols.',
   },
+  slugAlreadyExistsError: {
+    id: 'course-authoring.library-authoring.create-library.form.slug-already-exists.error',
+    defaultMessage: 'A library with this ID already exists in this organization. Enter a different ID.',
+    description: 'Error shown under the Library ID field when the organization already has a library with that ID.',
+  },
   requiredFieldError: {
     id: 'course-authoring.library-authoring.create-library.form.required.error',
     defaultMessage: 'Required field.',
@@ -87,6 +92,11 @@ const messages = defineMessages({
     id: 'course-authoring.library-authoring.create-library.form.create-library.cancel.button',
     defaultMessage: 'Cancel',
     description: 'Button text to cancel creating a new library.',
+  },
+  createLibraryError: {
+    id: 'course-authoring.library-authoring.create-library.form.create-error',
+    defaultMessage: 'The library could not be created. Please try again.',
+    description: 'Error shown under the create library form when the server rejects the request for a reason other than a taken library ID.',
   },
 });
 
