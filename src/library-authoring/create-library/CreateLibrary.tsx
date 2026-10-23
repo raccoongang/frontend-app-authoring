@@ -1,13 +1,15 @@
 import { StudioFooterSlot } from '@edx/frontend-component-footer';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
+  Alert,
   Container,
   Form,
   Button,
   StatefulButton,
   ActionRow,
 } from '@openedx/paragon';
-import { Formik } from 'formik';
+import { Formik, FormikProps } from 'formik';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 
@@ -15,12 +17,27 @@ import { REGEX_RULES } from '../../constants';
 import Header from '../../header';
 import FormikControl from '../../generic/FormikControl';
 import FormikErrorFeedback from '../../generic/FormikErrorFeedback';
-import AlertError from '../../generic/alert-error';
 import { useOrganizationListData } from '../../generic/data/apiHooks';
 import SubHeader from '../../generic/sub-header/SubHeader';
 import { useStudioHome } from '../../studio-home/hooks';
 import { useCreateLibraryV2 } from './data/apiHooks';
 import messages from './messages';
+
+interface CreateLibraryFormValues {
+  title: string;
+  org: string;
+  slug: string;
+}
+
+/**
+ * The server answers 400 with a `slug` error when the org already has a library with that ID.
+ * The form only submits slugs that pass the server's own slug format check, so a `slug` error
+ * here always means the ID is taken.
+ */
+const isLibraryIdTaken = (error: unknown) => {
+  const { response } = (error ?? {}) as { response?: { status?: number; data?: { slug?: unknown; }; }; };
+  return response?.status === 400 && !!response.data?.slug;
+};
 
 const CreateLibrary = () => {
   const intl = useIntl();
@@ -28,6 +45,10 @@ const CreateLibrary = () => {
 
   const { noSpaceRule, specialCharsRule } = REGEX_RULES;
   const validSlugIdRegex = /^[a-zA-Z\d]+(?:[\w-]*[a-zA-Z\d]+)*$/;
+
+  // The org + ID pair the server rejected as already taken. It stays invalid until either changes.
+  const [takenLibraryKey, setTakenLibraryKey] = useState<{ org: string; slug: string } | null>(null);
+  const formikRef = useRef<FormikProps<CreateLibraryFormValues>>(null);
 
   const {
     mutate,
@@ -59,6 +80,14 @@ const CreateLibrary = () => {
     navigate('/libraries');
   };
 
+  useEffect(() => {
+    // Re-validate against the current values, so a late response doesn't flag an ID the user has
+    // already changed.
+    if (takenLibraryKey) {
+      formikRef.current?.validateForm();
+    }
+  }, [takenLibraryKey]);
+
   if (data) {
     navigate(`/library/${data.id}`);
   }
@@ -70,7 +99,8 @@ const CreateLibrary = () => {
         <SubHeader
           title={intl.formatMessage(messages.createLibrary)}
         />
-        <Formik
+        <Formik<CreateLibraryFormValues>
+          innerRef={formikRef}
           initialValues={{
             title: '',
             org: '',
@@ -92,10 +122,25 @@ const CreateLibrary = () => {
                 .matches(
                   validSlugIdRegex,
                   intl.formatMessage(messages.invalidSlugError),
+                )
+                .test(
+                  'library-id-not-taken',
+                  intl.formatMessage(messages.slugAlreadyExistsError),
+                  (slug, context) => !(
+                    takenLibraryKey
+                    && takenLibraryKey.slug === slug
+                    && takenLibraryKey.org === context.parent.org
+                  ),
                 ),
             })
           }
-          onSubmit={(values) => mutate(values)}
+          onSubmit={(values) => mutate(values, {
+            onError: (createError) => {
+              if (isLibraryIdTaken(createError)) {
+                setTakenLibraryKey({ org: values.org, slug: values.slug });
+              }
+            },
+          })}
         >
           {(formikProps) => (
             <Form onSubmit={formikProps.handleSubmit}>
@@ -160,7 +205,11 @@ const CreateLibrary = () => {
             </Form>
           )}
         </Formik>
-        {isError && (<AlertError error={error} />)}
+        {isError && !isLibraryIdTaken(error) && (
+          <Alert variant="danger" className="mt-3">
+            {intl.formatMessage(messages.createLibraryError)}
+          </Alert>
+        )}
       </Container>
       <StudioFooterSlot />
     </>
