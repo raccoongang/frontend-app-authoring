@@ -8,8 +8,8 @@ import {
   StatefulButton,
   ActionRow,
 } from '@openedx/paragon';
-import { Formik, FormikProps } from 'formik';
-import { useEffect, useRef, useState } from 'react';
+import { Formik } from 'formik';
+import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 
@@ -47,8 +47,8 @@ const CreateLibrary = () => {
   const validSlugIdRegex = /^[a-zA-Z\d]+(?:[\w-]*[a-zA-Z\d]+)*$/;
 
   // The org + ID pair the server rejected as already taken. It stays invalid until either changes.
-  const [takenLibraryKey, setTakenLibraryKey] = useState<{ org: string; slug: string } | null>(null);
-  const formikRef = useRef<FormikProps<CreateLibraryFormValues>>(null);
+  // Read at validation time, so a schema built in an earlier render still sees the latest pair.
+  const takenLibraryKeyRef = useRef<{ org: string; slug: string } | null>(null);
 
   const {
     mutate,
@@ -80,14 +80,6 @@ const CreateLibrary = () => {
     navigate('/libraries');
   };
 
-  useEffect(() => {
-    // Re-validate against the current values, so a late response doesn't flag an ID the user has
-    // already changed.
-    if (takenLibraryKey) {
-      formikRef.current?.validateForm();
-    }
-  }, [takenLibraryKey]);
-
   if (data) {
     navigate(`/library/${data.id}`);
   }
@@ -100,7 +92,6 @@ const CreateLibrary = () => {
           title={intl.formatMessage(messages.createLibrary)}
         />
         <Formik<CreateLibraryFormValues>
-          innerRef={formikRef}
           initialValues={{
             title: '',
             org: '',
@@ -127,17 +118,19 @@ const CreateLibrary = () => {
                   'library-id-not-taken',
                   intl.formatMessage(messages.slugAlreadyExistsError),
                   (slug, context) => !(
-                    takenLibraryKey
-                    && takenLibraryKey.slug === slug
-                    && takenLibraryKey.org === context.parent.org
+                    takenLibraryKeyRef.current
+                    && takenLibraryKeyRef.current.slug === slug
+                    && takenLibraryKeyRef.current.org === context.parent.org
                   ),
                 ),
             })
           }
-          onSubmit={(values) => mutate(values, {
+          onSubmit={(values, { validateForm }) => mutate(values, {
             onError: (createError) => {
               if (isLibraryIdTaken(createError)) {
-                setTakenLibraryKey({ org: values.org, slug: values.slug });
+                takenLibraryKeyRef.current = { org: values.org, slug: values.slug };
+                // Validates the current values, so a late reply doesn't flag an ID the user already changed.
+                validateForm();
               }
             },
           })}
