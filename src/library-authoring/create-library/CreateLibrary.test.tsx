@@ -17,6 +17,7 @@ import { getContentLibraryV2CreateApiUrl } from './data/api';
 import { LibraryRestoreStatus } from './data/restoreConstants';
 import messages from './messages';
 
+const libraryIdTakenReply: [number, object] = [400, { slug: 'A library with that ID already exists.' }];
 const mockNavigate = jest.fn();
 let axiosMock: MockAdapter;
 
@@ -212,7 +213,7 @@ describe('<CreateLibrary />', () => {
     const user = userEvent.setup();
     axiosMock.onGet(getStudioHomeApiUrl()).reply(200, studioHomeMock);
     axiosMock.onPost(getContentLibraryV2CreateApiUrl())
-      .replyOnce(400, { slug: 'A library with that ID already exists.' })
+      .replyOnce(...libraryIdTakenReply)
       .onPost(getContentLibraryV2CreateApiUrl())
       .reply(200, { id: 'library-id' });
     render(<CreateLibrary />);
@@ -256,7 +257,7 @@ describe('<CreateLibrary />', () => {
     let rejectRequest: () => void = () => {};
     axiosMock.onPost(getContentLibraryV2CreateApiUrl()).replyOnce(() =>
       new Promise((resolve) => {
-        rejectRequest = () => resolve([400, { slug: 'A library with that ID already exists.' }]);
+        rejectRequest = () => resolve(libraryIdTakenReply);
       })
     );
     render(<CreateLibrary />);
@@ -289,7 +290,7 @@ describe('<CreateLibrary />', () => {
       allowedOrganizationsForLibraries: ['org1', 'org2'],
     });
     axiosMock.onPost(getContentLibraryV2CreateApiUrl())
-      .replyOnce(400, { slug: 'A library with that ID already exists.' })
+      .replyOnce(...libraryIdTakenReply)
       .onPost(getContentLibraryV2CreateApiUrl())
       .reply(200, { id: 'library-id' });
     render(<CreateLibrary />);
