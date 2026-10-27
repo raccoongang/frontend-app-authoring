@@ -1,6 +1,7 @@
 import { StudioFooterSlot } from '@edx/frontend-component-footer';
 import { useIntl } from '@edx/frontend-platform/i18n';
 import {
+  Alert,
   Container,
   Form,
   Button,
@@ -8,6 +9,7 @@ import {
   ActionRow,
 } from '@openedx/paragon';
 import { Formik } from 'formik';
+import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 
@@ -15,12 +17,27 @@ import { REGEX_RULES } from '../../constants';
 import Header from '../../header';
 import FormikControl from '../../generic/FormikControl';
 import FormikErrorFeedback from '../../generic/FormikErrorFeedback';
-import AlertError from '../../generic/alert-error';
 import { useOrganizationListData } from '../../generic/data/apiHooks';
 import SubHeader from '../../generic/sub-header/SubHeader';
 import { useStudioHome } from '../../studio-home/hooks';
 import { useCreateLibraryV2 } from './data/apiHooks';
 import messages from './messages';
+
+interface CreateLibraryFormValues {
+  title: string;
+  org: string;
+  slug: string;
+}
+
+/**
+ * The server answers 400 with a `slug` error when the org already has a library with that ID.
+ * The form only submits slugs that pass the server's own slug format check, so a `slug` error
+ * here always means the ID is taken.
+ */
+const isLibraryIdTaken = (error: unknown) => {
+  const { response } = (error ?? {}) as { response?: { status?: number; data?: { slug?: unknown; }; }; };
+  return response?.status === 400 && !!response.data?.slug;
+};
 
 const CreateLibrary = () => {
   const intl = useIntl();
@@ -28,6 +45,10 @@ const CreateLibrary = () => {
 
   const { noSpaceRule, specialCharsRule } = REGEX_RULES;
   const validSlugIdRegex = /^[a-zA-Z\d]+(?:[\w-]*[a-zA-Z\d]+)*$/;
+
+  // The org + ID pair the server rejected as already taken. It stays invalid until either changes.
+  // Read at validation time, so a schema built in an earlier render still sees the latest pair.
+  const takenLibraryKeyRef = useRef<{ org: string; slug: string } | null>(null);
 
   const {
     mutate,
@@ -70,7 +91,7 @@ const CreateLibrary = () => {
         <SubHeader
           title={intl.formatMessage(messages.createLibrary)}
         />
-        <Formik
+        <Formik<CreateLibraryFormValues>
           initialValues={{
             title: '',
             org: '',
@@ -92,10 +113,27 @@ const CreateLibrary = () => {
                 .matches(
                   validSlugIdRegex,
                   intl.formatMessage(messages.invalidSlugError),
+                )
+                .test(
+                  'library-id-not-taken',
+                  intl.formatMessage(messages.slugAlreadyExistsError),
+                  (slug, context) => !(
+                    takenLibraryKeyRef.current
+                    && takenLibraryKeyRef.current.slug === slug
+                    && takenLibraryKeyRef.current.org === context.parent.org
+                  ),
                 ),
             })
           }
-          onSubmit={(values) => mutate(values)}
+          onSubmit={(values, { validateForm }) => mutate(values, {
+            onError: (createError) => {
+              if (isLibraryIdTaken(createError)) {
+                takenLibraryKeyRef.current = { org: values.org, slug: values.slug };
+                // Validates the current values, so a late reply doesn't flag an ID the user already changed.
+                validateForm();
+              }
+            },
+          })}
         >
           {(formikProps) => (
             <Form onSubmit={formikProps.handleSubmit}>
@@ -160,7 +198,11 @@ const CreateLibrary = () => {
             </Form>
           )}
         </Formik>
-        {isError && (<AlertError error={error} />)}
+        {isError && !isLibraryIdTaken(error) && (
+          <Alert variant="danger" className="mt-3">
+            {intl.formatMessage(messages.createLibraryError)}
+          </Alert>
+        )}
       </Container>
       <StudioFooterSlot />
     </>
