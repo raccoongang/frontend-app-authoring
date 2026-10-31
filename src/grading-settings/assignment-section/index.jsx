@@ -14,6 +14,8 @@ import messages from './messages';
 const MIN_NUMBER_VALUE = 0;
 const MAX_NUMBER_VALUE = 100;
 
+const isDropCountTooHigh = ({ minCount, dropCount }) => dropCount > 0 && dropCount >= minCount;
+
 const AssignmentSection = ({
   intl,
   handleRemoveAssignment,
@@ -27,7 +29,8 @@ const AssignmentSection = ({
   const {
     type, weight, minCount, dropCount,
   } = ASSIGNMENT_TYPES;
-  const isFieldsWithoutErrors = Object.values(errorList).every(field => field !== true);
+  const isFieldsWithoutErrors = Object.values(errorList).every(field => field !== true)
+    && !graders?.some(isDropCountTooHigh);
 
   if (!isFieldsWithoutErrors) {
     setShowSavePrompt(false);
@@ -68,10 +71,18 @@ const AssignmentSection = ({
     setShowSuccessAlert(false);
   };
 
+  const handleAssignmentRemove = (assignmentId) => {
+    setErrorList(prevState => Object.fromEntries(
+      Object.entries(prevState).filter(([key]) => !key.endsWith(`-${assignmentId}`)),
+    ));
+    handleRemoveAssignment(assignmentId);
+  };
+
   return (
     <div className="assignment-items">
       {graders?.map((gradeField) => {
         const courseAssignmentUsage = courseAssignmentLists[gradeField.type];
+        const dropCountError = errorList[`${dropCount}-${gradeField.id}`];
         const showDefinedCaseAlert = gradeField.minCount !== courseAssignmentUsage?.length
             && Boolean(courseAssignmentUsage?.length);
         const showNotDefinedCaseAlert = !courseAssignmentUsage?.length && Boolean(gradeField.type);
@@ -125,15 +136,13 @@ const AssignmentSection = ({
                 descriptions={intl.formatMessage(messages.numberOfDroppableDescription)}
                 type="number"
                 min={MIN_NUMBER_VALUE}
-                errorMsg={intl.formatMessage(messages.numberOfDroppableErrorMessage)}
+                errorMsg={dropCountError
+                  ? intl.formatMessage(messages.numberOfDroppableErrorMessage)
+                  : intl.formatMessage(messages.numberOfDroppableUndroppableErrorMessage, { type: gradeField.type })}
                 name={dropCount}
-                gradeField={gradeField}
                 value={gradeField.dropCount}
                 onChange={(e) => handleAssignmentChange(e, gradeField.id)}
-                secondErrorMsg={intl.formatMessage(messages.numberOfDroppableSecondErrorMessage, {
-                  type: gradeField.type,
-                })}
-                errorEffort={errorList[`${dropCount}-${gradeField.id}`]}
+                errorEffort={dropCountError || isDropCountTooHigh(gradeField)}
               />
             </ol>
             {showDefinedCaseAlert && (
@@ -184,7 +193,7 @@ const AssignmentSection = ({
               className="course-grading-assignment-delete-btn"
               variant="outline-primary"
               size="sm"
-              onClick={() => handleRemoveAssignment(gradeField.id)}
+              onClick={() => handleAssignmentRemove(gradeField.id)}
             >
               {intl.formatMessage(messages.assignmentDeleteButton)}
             </Button>

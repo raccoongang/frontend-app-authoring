@@ -4,12 +4,13 @@ import { injectIntl, IntlProvider } from '@edx/frontend-platform/i18n';
 import { AppProvider } from '@edx/frontend-platform/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
-  act, fireEvent, render, screen,
+  act, fireEvent, render, screen, waitFor,
 } from '@testing-library/react';
 import MockAdapter from 'axios-mock-adapter';
 
 import initializeStore from '../store';
 import gradingSettings from './__mocks__/gradingSettings';
+import assignmentMessages from './assignment-section/messages';
 import { getCourseSettingsApiUrl, getGradingSettingsApiUrl } from './data/api';
 import * as apiHooks from './data/apiHooks';
 import GradingSettings from './GradingSettings';
@@ -97,6 +98,59 @@ describe('<GradingSettings />', () => {
     const segmentInput = segmentInputs[1];
     fireEvent.change(segmentInput, { target: { value: 'Test' } });
     testSaving();
+  });
+
+  it('should stop saving and show error alert when save fails', async () => {
+    axiosMock.onPost(getGradingSettingsApiUrl(courseId)).reply(500);
+    const segmentInputs = await screen.findAllByTestId('grading-scale-segment-input');
+    fireEvent.change(segmentInputs[1], { target: { value: 'Test' } });
+    testSaving();
+    await screen.findByText(messages.alertFail.defaultMessage);
+    // Give a retry loop time to fire before counting requests.
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 100);
+      });
+    });
+    expect(axiosMock.history.post).toHaveLength(1);
+    expect(screen.getByText(messages.alertFail.defaultMessage)).toBeVisible();
+    expect(screen.getByText(messages.buttonSaveText.defaultMessage)).toBeInTheDocument();
+  });
+
+  it('should send one request when saving again after a failed save', async () => {
+    axiosMock.onPost(getGradingSettingsApiUrl(courseId)).reply(500);
+    const segmentInputs = await screen.findAllByTestId('grading-scale-segment-input');
+    fireEvent.change(segmentInputs[1], { target: { value: 'Test' } });
+    testSaving();
+    await screen.findByText(messages.alertFail.defaultMessage);
+    axiosMock.onPost(getGradingSettingsApiUrl(courseId)).reply(200, {});
+    fireEvent.click(screen.getByText(messages.buttonSaveText.defaultMessage));
+    await screen.findByText(messages.alertSuccess.defaultMessage);
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 100);
+      });
+    });
+    expect(axiosMock.history.post).toHaveLength(2);
+  });
+
+  it('should hide the save error alert on cancel', async () => {
+    axiosMock.onPost(getGradingSettingsApiUrl(courseId)).reply(500);
+    const segmentInputs = await screen.findAllByTestId('grading-scale-segment-input');
+    fireEvent.change(segmentInputs[1], { target: { value: 'Test' } });
+    testSaving();
+    await screen.findByText(messages.alertFail.defaultMessage);
+    fireEvent.click(screen.getByText(messages.buttonCancelText.defaultMessage));
+    await waitFor(() => {
+      expect(screen.queryByText(messages.alertFail.defaultMessage)).not.toBeInTheDocument();
+    });
+  });
+
+  it('should allow saving after deleting an assignment type with an invalid field', async () => {
+    const weightInputs = await screen.findAllByTestId('assignment-weight-input');
+    fireEvent.change(weightInputs[0], { target: { value: '' } });
+    fireEvent.click(screen.getAllByText(assignmentMessages.assignmentDeleteButton.defaultMessage)[0]);
+    expect(await screen.findByText(messages.buttonSaveText.defaultMessage)).toBeInTheDocument();
   });
 
   it('should handle being offline gracefully', async () => {
