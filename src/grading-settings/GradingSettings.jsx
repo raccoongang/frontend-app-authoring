@@ -5,7 +5,12 @@ import {
   Layout,
   StatefulButton,
 } from '@openedx/paragon';
-import { Add as IconAdd, CheckCircle, Warning } from '@openedx/paragon/icons';
+import {
+  Add as IconAdd,
+  CheckCircle,
+  ErrorOutline,
+  Warning,
+} from '@openedx/paragon/icons';
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 
@@ -59,6 +64,7 @@ const GradingSettings = () => {
     isPending: savePending,
     isSuccess: savingStatus,
     isError: savingFailed,
+    reset: resetSavingStatus,
   } = useGradingSettingUpdater(courseId);
 
   const courseAssignmentLists = gradingSettings?.courseAssignmentLists;
@@ -123,12 +129,23 @@ const GradingSettings = () => {
 
   const handleQueryProcessing = () => {
     setShowSuccessAlert(false);
-    updateGradingSettings(gradingData);
+    // Reset pending in the same render as the error, otherwise InternetConnectionAlert re-sends the request.
+    updateGradingSettings(gradingData, {
+      onError: () => {
+        setIsQueryPending(false);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      },
+    });
   };
 
   const handleSendGradingSettingsData = () => {
     setIsQueryPending(true);
     setOverrideInternetConnectionAlert(true);
+  };
+
+  const handleCancelChanges = () => {
+    resetSavingStatus();
+    handleResetPageData();
   };
 
   const handleInternetConnectionFailed = () => {
@@ -161,6 +178,12 @@ const GradingSettings = () => {
             aria-hidden="true"
             aria-labelledby={intl.formatMessage(messages.alertSuccessAriaLabelledby)}
             aria-describedby={intl.formatMessage(messages.alertSuccessAriaDescribedby)}
+          />
+          <AlertMessage
+            show={savingFailed}
+            variant="danger"
+            icon={ErrorOutline}
+            title={intl.formatMessage(messages.alertFail)}
           />
         </div>
         <div>
@@ -283,7 +306,7 @@ const GradingSettings = () => {
           role="dialog"
           actions={[
             !isQueryPending && (
-              <Button key="cancel" variant="tertiary" onClick={handleResetPageData}>
+              <Button key="cancel" variant="tertiary" onClick={handleCancelChanges}>
                 {intl.formatMessage(messages.buttonCancelText)}
               </Button>
             ),
