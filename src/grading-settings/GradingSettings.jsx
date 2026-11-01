@@ -128,6 +128,10 @@ const GradingSettings = () => {
   const isEditable = !isLoadingUserPermissions && canEditGradingSettings;
 
   const handleQueryProcessing = () => {
+    // InternetConnectionAlert calls this again when a retry clears `isFailed`; don't send the same save twice.
+    if (savePending) {
+      return;
+    }
     setShowSuccessAlert(false);
     // Reset pending in the same render as the error, otherwise InternetConnectionAlert re-sends the request.
     updateGradingSettings(gradingData, {

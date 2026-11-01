@@ -138,6 +138,23 @@ describe('<GradingSettings />', () => {
     expect(screen.getByText(messages.buttonSaveText.defaultMessage)).toBeInTheDocument();
   });
 
+  it('should send one request when saving again after a failed save', async () => {
+    axiosMock.onPost(getGradingSettingsApiUrl(courseId)).reply(500);
+    const segmentInputs = await screen.findAllByTestId('grading-scale-segment-input');
+    fireEvent.change(segmentInputs[1], { target: { value: 'Test' } });
+    testSaving();
+    await screen.findByText(messages.alertFail.defaultMessage);
+    axiosMock.onPost(getGradingSettingsApiUrl(courseId)).reply(200, {});
+    fireEvent.click(screen.getByText(messages.buttonSaveText.defaultMessage));
+    await screen.findByText(messages.alertSuccess.defaultMessage);
+    await act(async () => {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 100);
+      });
+    });
+    expect(axiosMock.history.post).toHaveLength(2);
+  });
+
   it('should hide the save error alert on cancel', async () => {
     axiosMock.onPost(getGradingSettingsApiUrl(courseId)).reply(500);
     const segmentInputs = await screen.findAllByTestId('grading-scale-segment-input');
