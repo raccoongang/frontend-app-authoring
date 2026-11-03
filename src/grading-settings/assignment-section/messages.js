@@ -65,9 +65,9 @@ const messages = defineMessages({
     id: 'course-authoring.grading-settings.assignment.number-of-droppable.error.message',
     defaultMessage: 'Please enter non-negative integer.',
   },
-  numberOfDroppableUndroppableErrorMessage: {
-    id: 'course-authoring.grading-settings.assignment.number-of-droppable.undroppable.error.message',
-    defaultMessage: 'You must have at least one undroppable {type} assignment.',
+  numberOfDroppableSecondErrorMessage: {
+    id: 'course-authoring.grading-settings.assignment.number-of-droppable.second.error.message',
+    defaultMessage: 'Cannot drop more {type} assignments than are assigned.',
   },
   assignmentAlertWarningTitle: {
     id: 'course-authoring.grading-settings.assignment.alert.warning.title',
