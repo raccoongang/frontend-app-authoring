@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import {
   act, render, fireEvent, within,
@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import initializeStore from '../../store';
 import SectionCard from './SectionCard';
+import DragContextProvider from '../drag-helper/DragContextProvider';
 
 let store;
 const mockPathname = '/foo-bar';
@@ -141,6 +142,58 @@ describe('<SectionCard />', () => {
     fireEvent.click(expandButton);
     expect(queryByTestId('section-card__subsections')).toBeInTheDocument();
     expect(queryByTestId('new-subsection-button')).toBeInTheDocument();
+  });
+
+  it('renders its subsections in the same render it becomes the drop target', () => {
+    let firstCommitDone = false;
+    let subsectionsMountedInFirstCommit;
+    const SubsectionsProbe = () => {
+      useLayoutEffect(() => {
+        subsectionsMountedInFirstCommit = !firstCommitDone;
+      }, []);
+      return null;
+    };
+    const FirstCommitMarker = () => {
+      useLayoutEffect(() => {
+        firstCommitDone = true;
+      }, []);
+      return null;
+    };
+
+    render(
+      <AppProvider store={store} wrapWithRouter={false}>
+        <QueryClientProvider client={queryClient}>
+          <MemoryRouter initialEntries={['/']}>
+            <IntlProvider locale="en">
+              <DragContextProvider activeId="subsection" overId={section.id}>
+                <SectionCard
+                  section={section}
+                  index={1}
+                  canMoveItem={jest.fn()}
+                  onOrderChange={jest.fn()}
+                  onOpenPublishModal={jest.fn()}
+                  onOpenHighlightsModal={jest.fn()}
+                  onOpenDeleteModal={jest.fn()}
+                  onOpenConfigureModal={jest.fn()}
+                  savingStatus=""
+                  onEditSectionSubmit={onEditSectionSubmit}
+                  onDuplicateSubmit={jest.fn()}
+                  isSectionsExpanded={false}
+                  onNewSubsectionSubmit={jest.fn()}
+                  isSelfPaced={false}
+                  isCustomRelativeDatesActive={false}
+                >
+                  <SubsectionsProbe />
+                </SectionCard>
+                <FirstCommitMarker />
+              </DragContextProvider>
+            </IntlProvider>
+          </MemoryRouter>
+        </QueryClientProvider>
+      </AppProvider>,
+    );
+
+    expect(subsectionsMountedInFirstCommit).toBe(true);
   });
 
   it('title only updates if changed', async () => {

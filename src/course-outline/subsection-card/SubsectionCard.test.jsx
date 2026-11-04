@@ -1,3 +1,4 @@
+import { useLayoutEffect } from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import {
   act, render, fireEvent, within, screen,
@@ -9,6 +10,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import initializeStore from '../../store';
 import SubsectionCard from './SubsectionCard';
+import DragContextProvider from '../drag-helper/DragContextProvider';
 import cardHeaderMessages from '../card-header/messages';
 import { COMPONENT_TYPES } from '../../generic/block-type-utils/constants';
 
@@ -158,6 +160,62 @@ describe('<SubsectionCard />', () => {
     fireEvent.click(expandButton);
     expect(queryByTestId('subsection-card__units')).not.toBeInTheDocument();
     expect(queryByTestId('new-unit-button')).not.toBeInTheDocument();
+  });
+
+  it('renders its units in the same render it becomes the drop target', () => {
+    let firstCommitDone = false;
+    let unitsMountedInFirstCommit;
+    const UnitsProbe = () => {
+      useLayoutEffect(() => {
+        unitsMountedInFirstCommit = !firstCommitDone;
+      }, []);
+      return null;
+    };
+    const FirstCommitMarker = () => {
+      useLayoutEffect(() => {
+        firstCommitDone = true;
+      }, []);
+      return null;
+    };
+
+    render(
+      <AppProvider store={store} wrapWithRouter={false}>
+        <QueryClientProvider client={queryClient}>
+          <MemoryRouter initialEntries={['/']}>
+            <IntlProvider locale="en">
+              <DragContextProvider activeId="unit" overId={subsection.id}>
+                <SubsectionCard
+                  section={section}
+                  subsection={subsection}
+                  index={1}
+                  isSelfPaced={false}
+                  getPossibleMoves={jest.fn()}
+                  onOrderChange={jest.fn()}
+                  onOpenPublishModal={jest.fn()}
+                  onOpenHighlightsModal={jest.fn()}
+                  onOpenDeleteModal={jest.fn()}
+                  onNewUnitSubmit={jest.fn()}
+                  onAddUnitFromLibrary={handleOnAddUnitFromLibrary}
+                  isCustomRelativeDatesActive={false}
+                  onEditClick={jest.fn()}
+                  savingStatus=""
+                  onEditSubmit={onEditSubectionSubmit}
+                  onDuplicateSubmit={jest.fn()}
+                  namePrefix="subsection"
+                  onOpenConfigureModal={jest.fn()}
+                  onPasteClick={jest.fn()}
+                >
+                  <UnitsProbe />
+                </SubsectionCard>
+                <FirstCommitMarker />
+              </DragContextProvider>
+            </IntlProvider>
+          </MemoryRouter>
+        </QueryClientProvider>
+      </AppProvider>,
+    );
+
+    expect(unitsMountedInFirstCommit).toBe(true);
   });
 
   it('updates current section, subsection and item', async () => {
