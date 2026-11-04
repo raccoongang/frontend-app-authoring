@@ -264,18 +264,20 @@ const DraggableList = ({
 
   const handleDragCancel = React.useCallback(() => {
     setActiveId?.(null);
+    setCurrentOverId(null);
     setDraggedItemClone(null);
     restoreSectionList();
   }, [setActiveId]);
 
   const handleDragEnd = (event: DragEndEvent) => {
+    // Cleared even without a drop target: a card still marked as the target keeps its children shown.
+    setCurrentOverId(null);
     const { active, over } = event;
     if (!active || !over) {
       return;
     }
     setActiveId(null);
     setDraggedItemClone(null);
-    setCurrentOverId(null);
     const { id } = active;
     const { id: overId } = over;
 
@@ -368,7 +370,8 @@ const DraggableList = ({
     droppableRects,
     ...args
   }) => {
-    const activeCategory = active.data?.current?.category;
+    // dnd-kit empties `active.data` while the dragged card is unmounted, so read the category from the outline.
+    const activeCategory = active.data?.current?.category ?? findItemInfo(active.id)?.category;
     const filteredContainers = droppableContainers.filter(
       (container) => {
         switch (activeCategory) {
