@@ -4,6 +4,7 @@ import {
   type Active,
   type DndContextProps,
   type DroppableContainer,
+  type Over,
 } from '@dnd-kit/core';
 import { COURSE_BLOCK_NAMES } from '@src/constants';
 import { XBlock } from '@src/data/types';
@@ -64,34 +65,42 @@ const emptyRect = { width: 0, height: 0, top: 0, left: 0, right: 0, bottom: 0 };
 
 const OverId = () => <span data-testid="over-id">{useContext(DragContext).overId}</span>;
 
+const restoreSectionList = jest.fn();
+const handleUnitDragAndDrop = jest.fn();
+
 const renderComponent = () =>
   render(
     <DraggableList
       items={sections}
-      setSections={jest.fn()}
-      restoreSectionList={jest.fn()}
+      // Run the updaters: the drop handlers are called from inside them.
+      setSections={(update) => (typeof update === 'function' ? update([...sections]) : update)}
+      restoreSectionList={restoreSectionList}
       handleSectionDragAndDrop={jest.fn()}
       handleSubsectionDragAndDrop={jest.fn()}
-      handleUnitDragAndDrop={jest.fn()}
+      handleUnitDragAndDrop={handleUnitDragAndDrop}
     >
       <OverId />
     </DraggableList>,
   );
 
+const dragEvent = (target: Over | null) => ({
+  active: activeUnit({ category: COURSE_BLOCK_NAMES.vertical.id }),
+  over: target,
+  activatorEvent: new Event('pointerdown'),
+  collisions: null,
+  delta: { x: 0, y: 0 },
+});
+
+const over = (id: string, category: string): Over => ({
+  id,
+  rect: emptyRect,
+  disabled: false,
+  data: { current: { category } },
+});
+
 const dragUnitOverOtherSubsection = () => {
   act(() => {
-    mockDndContextProps.onDragOver?.({
-      active: activeUnit({ category: COURSE_BLOCK_NAMES.vertical.id }),
-      over: {
-        id: 'other-subsection',
-        rect: emptyRect,
-        disabled: false,
-        data: { current: { category: COURSE_BLOCK_NAMES.sequential.id } },
-      },
-      activatorEvent: new Event('pointerdown'),
-      collisions: null,
-      delta: { x: 0, y: 0 },
-    });
+    mockDndContextProps.onDragOver?.(dragEvent(over('other-subsection', COURSE_BLOCK_NAMES.sequential.id)));
   });
 };
 
@@ -120,22 +129,32 @@ describe('<DraggableList />', () => {
     );
   });
 
-  it('clears the drop target when a drag is cancelled', () => {
+  it('clears the drop target and restores the outline when a drag is cancelled', () => {
     renderComponent();
     dragUnitOverOtherSubsection();
     expect(screen.getByTestId('over-id')).toHaveTextContent('other-subsection');
 
     act(() => {
-      mockDndContextProps.onDragCancel?.({
-        active: activeUnit({}),
-        over: null,
-        activatorEvent: new Event('pointerdown'),
-        collisions: null,
-        delta: { x: 0, y: 0 },
-      });
+      mockDndContextProps.onDragCancel?.(dragEvent(null));
     });
 
     expect(screen.getByTestId('over-id')).toBeEmptyDOMElement();
+    expect(restoreSectionList).toHaveBeenCalledTimes(1);
+  });
+
+  it('forgets the original parent of a cancelled drag', () => {
+    renderComponent();
+    dragUnitOverOtherSubsection();
+    act(() => {
+      mockDndContextProps.onDragCancel?.(dragEvent(null));
+    });
+
+    // Dropped back on itself: nothing to save unless a stale parent from the cancelled drag is left over.
+    act(() => {
+      mockDndContextProps.onDragEnd?.(dragEvent(over('unit', COURSE_BLOCK_NAMES.vertical.id)));
+    });
+
+    expect(handleUnitDragAndDrop).not.toHaveBeenCalled();
   });
 
   it('clears the drop target when a drag ends outside any target', () => {
@@ -143,13 +162,7 @@ describe('<DraggableList />', () => {
     dragUnitOverOtherSubsection();
 
     act(() => {
-      mockDndContextProps.onDragEnd?.({
-        active: activeUnit({}),
-        over: null,
-        activatorEvent: new Event('pointerdown'),
-        collisions: null,
-        delta: { x: 0, y: 0 },
-      });
+      mockDndContextProps.onDragEnd?.(dragEvent(null));
     });
 
     expect(screen.getByTestId('over-id')).toBeEmptyDOMElement();

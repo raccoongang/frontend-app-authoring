@@ -266,6 +266,7 @@ const DraggableList = ({
     setActiveId?.(null);
     setCurrentOverId(null);
     setDraggedItemClone(null);
+    prevContainerInfo.current = null;
     restoreSectionList();
   }, [setActiveId]);
 
