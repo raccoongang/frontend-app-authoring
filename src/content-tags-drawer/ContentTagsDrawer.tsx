@@ -7,7 +7,7 @@ import {
   Toast,
 } from '@openedx/paragon';
 import { useIntl, FormattedMessage } from '@edx/frontend-platform/i18n';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useHref, useParams, useNavigate } from 'react-router-dom';
 import classNames from 'classnames';
 import messages from './messages';
 import ContentTagsCollapsible from './ContentTagsCollapsible';
@@ -22,7 +22,17 @@ interface TaxonomyListProps {
 
 const TaxonomyList = ({ contentId }: TaxonomyListProps) => {
   const navigate = useNavigate();
+  const taxonomiesHref = useHref('/taxonomies');
   const intl = useIntl();
+
+  const openTaxonomiesPage = () => {
+    // Legacy Studio pages render this drawer in an iframe: open the page in the top window, not inside the drawer
+    if (window.top && window.top !== window.self) {
+      window.top.location.href = new URL(taxonomiesHref, window.location.href).href;
+    } else {
+      navigate('/taxonomies');
+    }
+  };
 
   const {
     isTaxonomyListLoaded,
@@ -61,7 +71,7 @@ const TaxonomyList = ({ contentId }: TaxonomyListProps) => {
               size="inline"
               variant="link"
               className="text-info-500 p-0 enable-taxonomies-button"
-              onClick={() => navigate('/taxonomies')}
+              onClick={openTaxonomiesPage}
             >
               { intl.formatMessage(messages.emptyDrawerContentLink) }
             </Button>
