@@ -212,13 +212,21 @@ const DraggableList = ({
     }
   };
 
+  const handleDragCancel = () => {
+    setActiveId(null);
+    setCurrentOverId(null);
+    prevContainerInfo.current = null;
+    restoreSectionList();
+  };
+
   const handleDragEnd = (event) => {
+    // Cleared even without a drop target: a card still marked as the target keeps its children shown.
+    setCurrentOverId(null);
     const { active, over } = event;
     if (!active || !over) {
       return;
     }
     setActiveId(null);
-    setCurrentOverId(null);
     const { id } = active;
     const { id: overId } = over;
 
@@ -297,7 +305,8 @@ const DraggableList = ({
   const customClosestCorners = ({
     active, droppableContainers, droppableRects, ...args
   }) => {
-    const activeCategory = active.data?.current?.category;
+    // dnd-kit empties `active.data` while the dragged card is unmounted, so read the category from the outline.
+    const activeCategory = active.data?.current?.category ?? findItemInfo(active.id)?.category;
     const filteredContainers = droppableContainers.filter(
       (container) => {
         switch (activeCategory) {
@@ -325,6 +334,7 @@ const DraggableList = ({
       onDragOver={handleDragOver}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
+      onDragCancel={handleDragCancel}
     >
       <DragContextProvider activeId={activeId} overId={currentOverId}>
         {children}
