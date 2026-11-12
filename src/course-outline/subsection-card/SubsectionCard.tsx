@@ -233,6 +233,10 @@ const SubsectionCard = ({
     }
   }, [activeId, overId]);
 
+  // Show children in the same render the card becomes the drop target: a dragged card left unmounted until the
+  // effect above expands it makes dnd-kit lose its data and jump-scroll the page.
+  const showChildren = isExpanded || overId === id;
+
   useEffect(() => {
     // if this items has been newly added, scroll to it.
     if (currentRef.current && (scrollState?.id === subsection.id || isScrolledToElement)) {
@@ -343,7 +347,7 @@ const SubsectionCard = ({
               </div>
             </>
           )}
-          {isExpanded && (
+          {showChildren && (
             <div
               data-testid="subsection-card__units"
               className={classNames('subsection-card__units', { 'item-children': isDraggable })}

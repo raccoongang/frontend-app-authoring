@@ -1,4 +1,5 @@
 import { getConfig, setConfig } from '@edx/frontend-platform';
+import { useLayoutEffect } from 'react';
 import {
   act,
   fireEvent,
@@ -14,6 +15,7 @@ import userEvent from '@testing-library/user-event';
 import { getXBlockApiUrl } from '@src/course-outline/data/api';
 import { courseOutlineQueryKeys } from '@src/course-outline/data/apiHooks';
 import { CourseInfoSidebar } from '@src/course-outline/outline-sidebar/info-sidebar/CourseInfoSidebar';
+import DragContextProvider from '@src/course-outline/drag-helper/DragContextProvider';
 import SectionCard from './SectionCard';
 import * as OutlineSidebarContext from '../outline-sidebar/OutlineSidebarContext';
 
@@ -177,6 +179,51 @@ describe('<SectionCard />', () => {
     fireEvent.click(expandButton);
     expect(screen.queryByTestId('section-card__subsections')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'New subsection' })).toBeInTheDocument();
+  });
+
+  it('renders its subsections in the same render it becomes the drop target', () => {
+    let firstCommitDone = false;
+    let subsectionsMountedInFirstCommit: boolean | undefined;
+    const SubsectionsProbe = () => {
+      useLayoutEffect(() => {
+        subsectionsMountedInFirstCommit = !firstCommitDone;
+      }, []);
+      return null;
+    };
+    const FirstCommitMarker = () => {
+      useLayoutEffect(() => {
+        firstCommitDone = true;
+      }, []);
+      return null;
+    };
+
+    render(
+      <DragContextProvider activeId="subsection" overId={section.id}>
+        <SectionCard
+          section={section}
+          index={1}
+          canMoveItem={jest.fn()}
+          onOrderChange={jest.fn()}
+          onOpenHighlightsModal={jest.fn()}
+          onOpenDeleteModal={jest.fn()}
+          onOpenConfigureModal={jest.fn()}
+          onDuplicateSubmit={jest.fn()}
+          isSectionsExpanded={false}
+          isSelfPaced={false}
+          isCustomRelativeDatesActive={false}
+        >
+          <SubsectionsProbe />
+        </SectionCard>
+        <FirstCommitMarker />
+      </DragContextProvider>,
+      {
+        path: '/course/:courseId',
+        params: { courseId: '5' },
+        extraWrapper: OutlineSidebarContext.OutlineSidebarProvider,
+      },
+    );
+
+    expect(subsectionsMountedInFirstCommit).toBe(true);
   });
 
   it('hides header based on isHeaderVisible flag', async () => {

@@ -1,5 +1,6 @@
 import { getConfig, setConfig } from '@edx/frontend-platform';
 import userEvent from '@testing-library/user-event';
+import { useLayoutEffect } from 'react';
 
 import {
   act,
@@ -14,6 +15,7 @@ import { XBlock } from '@src/data/types';
 import { ContainerType } from '@src/generic/key-utils';
 
 import cardHeaderMessages from '../card-header/messages';
+import DragContextProvider from '@src/course-outline/drag-helper/DragContextProvider';
 import { OutlineSidebarProvider } from '../outline-sidebar/OutlineSidebarContext';
 import SubsectionCard from './SubsectionCard';
 
@@ -189,6 +191,52 @@ describe('<SubsectionCard />', () => {
     fireEvent.click(expandButton);
     expect(screen.queryByTestId('subsection-card__units')).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'New unit' })).not.toBeInTheDocument();
+  });
+
+  it('renders its units in the same render it becomes the drop target', () => {
+    let firstCommitDone = false;
+    let unitsMountedInFirstCommit: boolean | undefined;
+    const UnitsProbe = () => {
+      useLayoutEffect(() => {
+        unitsMountedInFirstCommit = !firstCommitDone;
+      }, []);
+      return null;
+    };
+    const FirstCommitMarker = () => {
+      useLayoutEffect(() => {
+        firstCommitDone = true;
+      }, []);
+      return null;
+    };
+
+    render(
+      <DragContextProvider activeId="unit" overId={subsection.id}>
+        <SubsectionCard
+          section={section}
+          subsection={subsection}
+          index={1}
+          isSelfPaced={false}
+          getPossibleMoves={jest.fn()}
+          onOrderChange={jest.fn()}
+          onOpenDeleteModal={jest.fn()}
+          isCustomRelativeDatesActive={false}
+          onDuplicateSubmit={jest.fn()}
+          onOpenConfigureModal={jest.fn()}
+          onPasteClick={jest.fn()}
+          isSectionsExpanded={false}
+        >
+          <UnitsProbe />
+        </SubsectionCard>
+        <FirstCommitMarker />
+      </DragContextProvider>,
+      {
+        path: '/course/:courseId',
+        params: { courseId: '5' },
+        extraWrapper: OutlineSidebarProvider,
+      },
+    );
+
+    expect(unitsMountedInFirstCommit).toBe(true);
   });
 
   it('updates current section, subsection and item', async () => {
