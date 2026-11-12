@@ -821,4 +821,20 @@ describe('<ContentTagsDrawer />', () => {
     fireEvent.click(enableButton);
     expect(mockNavigate).toHaveBeenCalledWith('/taxonomies');
   });
+
+  it('should open the taxonomies page in the top window when rendered in an iframe', async () => {
+    const topWindow = { location: { href: '' } };
+    const topSpy = jest.spyOn(window, 'top', 'get').mockReturnValue(topWindow);
+
+    renderDrawer(emptyTagsId);
+    const enableButton = await screen.findByRole('button', {
+      name: /enable a taxonomy/i,
+    });
+    fireEvent.click(enableButton);
+
+    expect(topWindow.location.href).toBe(`${window.location.origin}/taxonomies`);
+    expect(mockNavigate).not.toHaveBeenCalled();
+
+    topSpy.mockRestore();
+  });
 });
