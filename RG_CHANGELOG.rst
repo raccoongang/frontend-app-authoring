@@ -9,12 +9,17 @@ and this project adheres to customized Semantic Versioning e.g.: `verawood-rg.1`
 [Unreleased]
 ************
 
+Changed:
+========
+* Rebased onto ``release/verawood.2``
+* Backported course-scoped AuthZ permission checks from upstream master, `#3151 <https://github.com/openedx/frontend-app-authoring/pull/3151>`_. Drop once a Verawood release includes it.
+
 Fixed:
 ======
-* New dropdown problems no longer start with ``undefined`` in every answer field (VERA-39).
-  Drop this patch once `#3216 <https://github.com/openedx/frontend-app-authoring/pull/3216>`_ and `#3217 <https://github.com/openedx/frontend-app-authoring/pull/3217>`_ are merged upstream.
-* Course outline no longer scrolls back to the highlighted block on every interaction when opened through a ``?show=`` link (VERA-41).
-  Drop this patch once `#3213 <https://github.com/openedx/frontend-app-authoring/pull/3213>`_ and `#3214 <https://github.com/openedx/frontend-app-authoring/pull/3214>`_ are merged upstream.
+* Show a taken library ID as an error under the Library ID field (TEA-304)
+* Grading page: block saving invalid values, stop re-sending a failed save (CC-163)
+* Course outline: dragging into a collapsed section or subsection (TEA-402)
+* Open the Taxonomies page in the top window from the iframe tags drawer (TEA-403)
 
 Added:
 ======
@@ -24,10 +29,3 @@ Added:
 Removed:
 ========
 * codecov CI action, and the ``coverage`` job left with nothing to do — the fork has no codecov project, so the step failed every run (VERA-6)
-
-Fixed:
-======
-* Image gallery sort control: the missing space in its label, and its menu spilling out of the modal (VERA-40).
-  Drop once `frontend-app-authoring#3219 <https://github.com/openedx/frontend-app-authoring/pull/3219>`_ (master) and `frontend-app-authoring#3220 <https://github.com/openedx/frontend-app-authoring/pull/3220>`_ (release/verawood) are merged upstream.
-* Fullscreen component editors now fill the modal — the text editor no longer stops short of the footer, and an advanced block no longer leaves empty space below it (VERA-38).
-  Drop this patch once `#3211 <https://github.com/openedx/frontend-app-authoring/pull/3211>`_ and `#3212 <https://github.com/openedx/frontend-app-authoring/pull/3212>`_ are merged upstream.
