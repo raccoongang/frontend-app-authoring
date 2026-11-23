@@ -98,14 +98,14 @@ const FileInfoModalSidebar = ({
           tooltipContent={intl.formatMessage(messages.lockFileTooltipContent)}
           src={InfoOutline}
           iconAs={Icon}
-          alt="Info"
+          alt={intl.formatMessage(messages.lockFileInfoAlt)}
           size="inline"
         />
         <ActionRow.Spacer />
         <CheckboxControl
           checked={lockedState}
           onChange={handleLock}
-          aria-label="Checkbox"
+          aria-label={intl.formatMessage(messages.lockFileCheckboxLabel)}
         />
       </ActionRow>
     </Stack>

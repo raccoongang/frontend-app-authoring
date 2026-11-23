@@ -13,6 +13,7 @@ import Loading from '../../generic/Loading';
 import AlertError from '../../generic/alert-error';
 import { useContentLibraryV2List } from '../data/apiHooks';
 import messages from './messages';
+import homeMessages from '../../studio-home/messages';
 
 interface EmptyStateProps {
   hasSearchQuery: boolean;
@@ -82,6 +83,11 @@ const SelectLibrary = ({ selectedLibrary, setSelectedLibrary }: SelectLibraryPro
         onChange={handleSearch}
         value={searchQuery}
         placeholder={intl.formatMessage(messages.selectLibrarySearchPlaceholder)}
+        screenReaderText={{
+          label: intl.formatMessage(homeMessages.searchLabel),
+          clearButton: intl.formatMessage(homeMessages.searchClearButton),
+          submitButton: intl.formatMessage(homeMessages.searchSubmitButton),
+        }}
       />
       {data.results.length === 0 ? (<EmptyState hasSearchQuery={!!searchQuery} />) : (
         <>

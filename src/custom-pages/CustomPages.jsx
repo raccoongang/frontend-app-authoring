@@ -117,14 +117,14 @@ const CustomPages = ({
       <Container size="xl" className="p-4 pt-5">
         <div className="small gray-700">
           <Breadcrumb
-            ariaLabel="Custom Page breadcrumbs"
+            ariaLabel={intl.formatMessage(messages.breadcrumbsLabel)}
             linkAs={Link}
             links={[
               {
-                label: 'Content',
+                label: intl.formatMessage(messages.breadcrumbContent),
                 to: waffleFlags.useNewCourseOutlinePage ? `/course/${courseId}` : `${config.STUDIO_BASE_URL}/course/${courseId}`,
               },
-              { label: 'Pages and Resources', to: getPagePath(courseId, 'true', 'tabs') },
+              { label: intl.formatMessage(messages.breadcrumbPagesAndResources), to: getPagePath(courseId, 'true', 'tabs') },
             ]}
           />
         </div>

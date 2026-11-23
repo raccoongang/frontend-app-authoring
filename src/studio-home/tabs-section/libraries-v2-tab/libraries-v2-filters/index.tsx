@@ -5,6 +5,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { LoadingSpinner } from '../../../../generic/Loading';
 import LibrariesV2OrderFilterMenu from './libraries-v2-order-filter-menu';
 import messages from '../../messages';
+import homeMessages from '../../../messages';
 
 export interface LibrariesV2FiltersProps {
   isLoading?: boolean;
@@ -92,6 +93,11 @@ const LibrariesV2Filters: React.FC<LibrariesV2FiltersProps> = ({
           value={search}
           className="mr-4"
           placeholder={intl.formatMessage(messages.librariesV2TabLibrarySearchPlaceholder)}
+          screenReaderText={{
+            label: intl.formatMessage(homeMessages.searchLabel),
+            clearButton: intl.formatMessage(homeMessages.searchClearButton),
+            submitButton: intl.formatMessage(homeMessages.searchSubmitButton),
+          }}
         />
         {isLoading && (
           <span className="search-field-loading">

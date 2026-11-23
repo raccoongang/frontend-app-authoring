@@ -5,8 +5,6 @@ import { getConfig } from '@edx/frontend-platform';
 
 import 'tinymce';
 // Interface language packs (they register themselves on the global `tinymce`); English is built in.
-// tinymce-i18n is not in package.json yet: adding it is a separate decision (it changes the lock file).
-// eslint-disable-next-line import/no-extraneous-dependencies
 import 'tinymce-i18n/langs5/uk';
 import './customTinyMcePlugins/embedIframeTranslations';
 import 'tinymce/themes/silver';

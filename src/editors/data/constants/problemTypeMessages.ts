@@ -1,4 +1,5 @@
-import { defineMessages, type IntlShape } from '@edx/frontend-platform/i18n';
+import { defineMessages } from '@edx/frontend-platform/i18n';
+import type { IntlShape } from 'react-intl';
 import { AdvanceProblemKeys, ProblemTypeKeys } from './problem';
 
 /**

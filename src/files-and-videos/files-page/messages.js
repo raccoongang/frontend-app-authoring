@@ -1,6 +1,14 @@
 import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
+  lockFileInfoAlt: {
+    id: 'course-authoring.files-and-videos.file-info.lock.info.alt',
+    defaultMessage: 'Info',
+  },
+  lockFileCheckboxLabel: {
+    id: 'course-authoring.files-and-videos.file-info.lock.checkbox.label',
+    defaultMessage: 'Checkbox',
+  },
   heading: {
     id: 'course-authoring.files-and-uploads.heading',
     defaultMessage: 'Files',

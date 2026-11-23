@@ -3,6 +3,7 @@ import { useIntl } from '@edx/frontend-platform/i18n';
 import { SearchField } from '@openedx/paragon';
 import { debounce } from 'lodash';
 import messages from './messages';
+import homeMessages from '../studio-home/messages';
 import { useSearchContext } from './SearchManager';
 
 /**
@@ -31,6 +32,11 @@ const SearchKeywordsField: React.FC<{
       value={searchKeywords}
       className={props.className}
       disabled={!!usageKey}
+      screenReaderText={{
+        label: intl.formatMessage(homeMessages.searchLabel),
+        clearButton: intl.formatMessage(homeMessages.searchClearButton),
+        submitButton: intl.formatMessage(homeMessages.searchSubmitButton),
+      }}
     >
       <SearchField.Label />
       <SearchField.Input

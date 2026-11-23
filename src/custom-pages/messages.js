@@ -1,6 +1,18 @@
 import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
+  breadcrumbsLabel: {
+    id: 'course-authoring.custom-pages.breadcrumbs.label',
+    defaultMessage: 'Custom Page breadcrumbs',
+  },
+  breadcrumbContent: {
+    id: 'course-authoring.custom-pages.breadcrumbs.content',
+    defaultMessage: 'Content',
+  },
+  breadcrumbPagesAndResources: {
+    id: 'course-authoring.custom-pages.breadcrumbs.pagesAndResources',
+    defaultMessage: 'Pages and Resources',
+  },
   heading: {
     id: 'course-authoring.custom-pages.heading',
     defaultMessage: 'Custom Pages',

@@ -1,6 +1,10 @@
 import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
+  fileInputLabel: {
+    id: 'course-authoring.files-and-videos.generic.fileInput.label',
+    defaultMessage: 'file-input',
+  },
   rowStatusMessage: {
     id: 'course-authoring.files-and-upload.rowStatus.message',
     defaultMessage: 'Showing {fileCount} of {rowCount}',
