@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Icon, Dropdown } from '@openedx/paragon';
 import { Check } from '@openedx/paragon/icons';
 import { getStudioHomeCoursesParams } from '../../../../data/selectors';
+import messages from '../../../../messages';
 
 const CoursesFilterMenu = ({
   id: idProp,
@@ -11,6 +13,7 @@ const CoursesFilterMenu = ({
   onItemMenuSelected,
   defaultItemSelectedText,
 }) => {
+  const intl = useIntl();
   const [itemMenuSelected, setItemMenuSelected] = useState(defaultItemSelectedText);
   const { cleanFilters } = useSelector(getStudioHomeCoursesParams);
   const handleCourseTypeSelected = (name, value) => {
@@ -31,7 +34,7 @@ const CoursesFilterMenu = ({
   return (
     <Dropdown id={`dropdown-toggle-${idProp}`}>
       <Dropdown.Toggle
-        alt="dropdown-toggle-menu-items"
+        alt={intl.formatMessage(messages.filterMenuToggleAlt)}
         id={idProp}
         variant="none"
         className="dropdown-toggle-menu-items"

@@ -10,6 +10,33 @@ ensureConfig([
   'STUDIO_BASE_URL',
 ], 'Course Apps API service');
 
+// First three letters of the Ukrainian month names the CMS writes ("Січ.", "Лист.", "Травень", ...).
+const UK_MONTH_PREFIXES = ['січ', 'лют', 'бер', 'кві', 'тра', 'чер', 'лип', 'сер', 'вер', 'жов', 'лис', 'гру'];
+const UK_SERVER_DATE = /^(\d{1,2})\s+([^\d\s.]+)\.?\s+(\d{4})\s+(?:р\.\s+)?(?:о\s+)?(\d{1,2}):(\d{2})/;
+
+/**
+ * Reads the date the CMS sends for an asset.
+ *
+ * The CMS writes it in the language of the request ("Nov 19, 2026 at 14:05 UTC" in
+ * English, "19 Лист. 2026 14:05 UTC" in Ukrainian), and `new Date()` only understands
+ * the first. Returns null when neither form fits.
+ */
+export const parseServerDate = (value) => {
+  if (!value) {
+    return null;
+  }
+  const native = new Date(value.replace(/\bat\b/g, ''));
+  if (!Number.isNaN(native.getTime())) {
+    return native;
+  }
+  const match = UK_SERVER_DATE.exec(value.trim());
+  const month = match ? UK_MONTH_PREFIXES.indexOf(match[2].toLowerCase().slice(0, 3)) : -1;
+  if (month < 0) {
+    return null;
+  }
+  return new Date(Date.UTC(Number(match[3]), month, Number(match[1]), Number(match[4]), Number(match[5])));
+};
+
 export const updateFileValues = (files) => {
   const updatedFiles = [];
   files.forEach(file => {
@@ -25,8 +52,9 @@ export const updateFileValues = (files) => {
     }
 
     const { dateAdded, locked, usageLocations } = file;
-    const utcDateString = dateAdded.replace(/\bat\b/g, '');
-    const utcDateTime = new Date(utcDateString).toString();
+    const parsedDate = parseServerDate(dateAdded);
+    // A date the browser cannot read stays as the server wrote it, instead of "Invalid Date".
+    const utcDateTime = parsedDate ? parsedDate.toString() : dateAdded;
     const lockStatus = locked ? 'locked' : 'public';
     const activeStatus = usageLocations?.length > 0 ? 'active' : 'inactive';
 

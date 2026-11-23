@@ -16,6 +16,8 @@ import {
   ShowAnswerTypesKeys,
 } from '../../../../../data/constants/problem';
 import { fetchEditorContent } from '../hooks';
+import { problemTypeTitle } from '../../../../../data/constants/problemTypeMessages';
+import { getAppIntl } from '../../../../../../generic/appIntl';
 
 export const state = {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -312,8 +314,11 @@ export const typeRowHooks = ({
       updateAnswersToCorrect();
     }
 
-    if (blockTitle === ProblemTypes[problemType].title) {
-      setBlockTitle(ProblemTypes[typeKey].title);
+    // The title is still the default one when it is the name of the current type, in English or in the language shown.
+    const intl = getAppIntl();
+    const currentTypeTitles = [ProblemTypes[problemType].title, problemTypeTitle(intl, problemType)];
+    if (currentTypeTitles.includes(blockTitle)) {
+      setBlockTitle(problemTypeTitle(intl, typeKey, ProblemTypes[typeKey].title));
     }
     updateField({ problemType: typeKey });
   };

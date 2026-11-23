@@ -177,7 +177,9 @@ const CreateOrRerunCourseForm = ({
   ) : (
     <Dropdown className="mr-2">
       <Dropdown.Toggle id={`${field.name}-dropdown`} variant="outline-primary">
-        {field.value || intl.formatMessage(messages.courseOrgNoOptions)}
+        {field.value || intl.formatMessage(
+          field.options?.length ? messages.courseOrgSelect : messages.courseOrgNoOptions,
+        )}
       </Dropdown.Toggle>
       <Dropdown.Menu>
         {field.options?.map((value) => (

@@ -6,8 +6,21 @@ import {
 import messages from '../../messages';
 import useHeaderButtons from './hooks/useHeaderButtons';
 
+// Enrolment modes are ids from the server; the known ones are shown translated, the value stays the id.
+const COURSE_MODE_MESSAGES = {
+  honor: messages.courseModeHonor,
+  verified: messages.courseModeVerified,
+  professional: messages.courseModeProfessional,
+  'no-id-professional': messages.courseModeNoIdProfessional,
+  audit: messages.courseModeAudit,
+  credit: messages.courseModeCredit,
+  masters: messages.courseModeMasters,
+  'executive-education': messages.courseModeExecutiveEducation,
+};
+
 const HeaderButtons = () => {
   const intl = useIntl();
+  const modeLabel = (mode) => (COURSE_MODE_MESSAGES[mode] ? intl.formatMessage(COURSE_MODE_MESSAGES[mode]) : mode);
   const {
     previewUrl,
     courseModes,
@@ -19,8 +32,8 @@ const HeaderButtons = () => {
 
   return (
     <>
-      <DropdownButton id="dropdown-basic-button" title={dropdowmItem} onSelect={(item) => setDropdowmItem(item)}>
-        {courseModes.map((mode) => <Dropdown.Item key={mode} eventKey={mode}>{mode}</Dropdown.Item>)}
+      <DropdownButton id="dropdown-basic-button" title={modeLabel(dropdowmItem)} onSelect={(item) => setDropdowmItem(item)}>
+        {courseModes.map((mode) => <Dropdown.Item key={mode} eventKey={mode}>{modeLabel(mode)}</Dropdown.Item>)}
       </DropdownButton>
       <Button
         variant="outline-primary"

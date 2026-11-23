@@ -358,9 +358,13 @@ const PageAlerts = ({
           };
         }
         case API_ERROR_TYPES.serverError: {
+          // The server answers a missing course with JSON in English; show a message in the interface language.
+          const isMissingCourse = v.data?.includes('"error_code":"course_does_not_exist"');
           const description = (
             <Truncate.Deprecated lines={2}>
-              {v.data || intl.formatMessage(messages.serverErrorAlertBody)}
+              {isMissingCourse
+                ? intl.formatMessage(messages.courseDoesNotExistAlertBody)
+                : (v.data || intl.formatMessage(messages.serverErrorAlertBody))}
             </Truncate.Deprecated>
           );
           return {

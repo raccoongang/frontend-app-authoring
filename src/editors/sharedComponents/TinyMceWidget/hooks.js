@@ -20,6 +20,8 @@ import * as tinyMCE from '../../data/constants/tinyMCE';
 import { getRelativeUrl, getStaticUrl, parseAssetName } from './utils';
 import { isLibraryKey } from '../../../generic/key-utils';
 
+const TINYMCE_LANGUAGES = ['uk'];
+
 /**
  * Dark-theme content styles for the TinyMCE editing surface.
  *
@@ -357,6 +359,8 @@ export const editorConfig = ({
     quickbarsSelectionToolbar,
   } = pluginConfig({ placeholder, editorType, enableImageUpload });
   const isLocaleRtl = isRtl(getLocale());
+  // Only the languages whose pack is imported in index.jsx; any other value makes TinyMCE request a file.
+  const editorLanguage = TINYMCE_LANGUAGES.includes(getLocale().split('-')[0]) ? getLocale().split('-')[0] : 'en';
   return {
     onInit: (evt, editor) => {
       setEditorRef(editor);
@@ -373,6 +377,7 @@ export const editorConfig = ({
       min_height: minHeight,
       max_height: maxHeight,
       contextmenu: 'link table',
+      language: editorLanguage,
       directionality: isLocaleRtl ? 'rtl' : 'ltr',
       document_base_url: baseURL,
       imagetools_cors_hosts: [removeProtocolFromUrl(lmsEndpointUrl), removeProtocolFromUrl(studioEndpointUrl)],

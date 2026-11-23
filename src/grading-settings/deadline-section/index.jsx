@@ -4,7 +4,8 @@ import { Form } from '@openedx/paragon';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import classNames from 'classnames';
 
-import { DEFAULT_TIME_STAMP, TIME_FORMAT } from '../../constants';
+import { DEFAULT_TIME_STAMP } from '../../constants';
+import datepickerMessages from '../../generic/datepicker-control/messages';
 import { formatTime, timerValidation } from './utils';
 import messages from './messages';
 
@@ -51,14 +52,16 @@ const DeadlineSection = ({
         data-testid="deadline-period-input"
         value={newDeadlineValue}
         onChange={handleDeadlineChange}
-        placeholder={TIME_FORMAT.toUpperCase()}
+        placeholder={intl.formatMessage(datepickerMessages.timePlaceholder)}
       />
       <Form.Control.Feedback className="grading-description">
         {intl.formatMessage(messages.gracePeriodOnDeadlineDescription)}
       </Form.Control.Feedback>
       {isError && (
         <Form.Control.Feedback className="feedback-error" type="invalid">
-          {intl.formatMessage(messages.gracePeriodOnDeadlineErrorMsg, { timeFormat: TIME_FORMAT.toUpperCase() })}
+          {intl.formatMessage(messages.gracePeriodOnDeadlineErrorMsg, {
+            timeFormat: intl.formatMessage(datepickerMessages.timePlaceholder),
+          })}
         </Form.Control.Feedback>
       )}
     </Form.Group>

@@ -103,6 +103,11 @@ const messages = defineMessages({
     id: 'course-authoring.course-outline.configure-modal.unit-tab.unit-all-learners-staff',
     defaultMessage: 'All Learners and Staff',
   },
+  modalCloseLabel: {
+    id: 'course-authoring.configure-modal.close',
+    defaultMessage: 'Close',
+    description: 'Accessible name of the button that closes the settings dialog',
+  },
   cancelButton: {
     id: 'course-authoring.course-outline.configure-modal.button.cancel',
     defaultMessage: 'Cancel',

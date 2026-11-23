@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { SearchField } from '@openedx/paragon';
 import { debounce } from 'lodash';
 
@@ -10,6 +11,7 @@ import { fetchStudioHomeData } from '../../../data/thunks';
 import { LoadingSpinner } from '../../../../generic/Loading';
 import CoursesTypesFilterMenu from './courses-types-filter-menu';
 import CoursesOrderFilterMenu from './courses-order-filter-menu';
+import messages from '../../../messages';
 import './index.scss';
 
 /* regex to check if a string has only whitespace
@@ -23,6 +25,7 @@ const CoursesFilters = ({
   onSubmitSearchField,
   isLoading,
 }) => {
+  const intl = useIntl();
   const studioHomeCoursesParams = useSelector(getStudioHomeCoursesParams);
   const {
     order,
@@ -107,7 +110,12 @@ const CoursesFilters = ({
           value={cleanFilters ? '' : inputSearchValue}
           className="mr-4"
           data-testid="input-filter-courses-search"
-          placeholder="Search"
+          placeholder={intl.formatMessage(messages.searchPlaceholder)}
+          screenReaderText={{
+            label: intl.formatMessage(messages.searchLabel),
+            clearButton: intl.formatMessage(messages.searchClearButton),
+            submitButton: intl.formatMessage(messages.searchSubmitButton),
+          }}
         />
         {isLoading && (
           <span className="search-field-loading" data-testid="loading-search-spinner">

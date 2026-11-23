@@ -116,6 +116,11 @@ const messages = defineMessages({
     defaultMessage: ' An error occurred in Studio and the page could not be loaded. Please try again in a few moments. We\'ve logged the error and our staff is currently working to resolve this error as soon as possible.',
     description: 'Generic server error alert title.',
   },
+  courseDoesNotExistAlertBody: {
+    id: 'course-authoring.course-outline.page-alert.course-does-not-exist.body',
+    defaultMessage: 'This course does not exist.',
+    description: 'Shown instead of the raw server response when the requested course is not found.',
+  },
   networkErrorAlert: {
     id: 'course-authoring.course-outline.page-alert.network-error.title',
     defaultMessage: 'Network error',

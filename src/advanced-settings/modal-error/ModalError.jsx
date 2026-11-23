@@ -32,7 +32,11 @@ const ModalError = ({
         id="course-authoring.advanced-settings.modal.error.description"
         defaultMessage="There was {errorCounter} while trying to save the course settings in the database.
             Please check the following validation feedbacks and reflect them in your course settings:"
-        values={{ errorCounter: <strong>{errorList.length} validation error </strong> }}
+        values={{
+          errorCounter: (
+            <strong>{intl.formatMessage(messages.modalErrorCount, { count: errorList.length })}</strong>
+          ),
+        }}
       />
     </p>
     <hr />

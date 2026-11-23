@@ -11,6 +11,7 @@ import messages from '../messages';
 import { useIndexOfLastVisibleChild } from '../hooks';
 import SequenceNavigationDropdown from './SequenceNavigationDropdown';
 import UnitButton from './UnitButton';
+import { getDefaultBlockName } from '../../../generic/default-names';
 
 const SequenceNavigationTabs = ({
   unitIds, unitId, handleCreateNewCourseXBlock, showPasteUnit,
@@ -30,7 +31,7 @@ const SequenceNavigationTabs = ({
 
   const handleAddNewSequenceUnit = () => {
     dispatch(updateQueryPendingStatus(true));
-    handleCreateNewCourseXBlock({ parentLocator: sequenceId, category: 'vertical', displayName: 'Unit' }, ({ courseKey, locator }) => {
+    handleCreateNewCourseXBlock({ parentLocator: sequenceId, category: 'vertical', displayName: getDefaultBlockName('vertical') }, ({ courseKey, locator }) => {
       navigate(`/course/${courseKey}/container/${locator}/${sequenceId}`, courseId);
       dispatch(changeEditTitleFormOpen(true));
     });

@@ -69,6 +69,61 @@ const messages = defineMessages({
     id: 'course-authoring.studio-home.organization.input.no-options',
     defaultMessage: 'No options',
   },
+  filterMenuToggleAlt: {
+    id: 'course-authoring.studio-home.courses.filter-menu.toggle-alt',
+    defaultMessage: 'Show the filter options',
+    description: 'Accessible name of the button that opens a course filter or sort menu on Studio home',
+  },
+  searchPlaceholder: {
+    id: 'course-authoring.studio-home.courses.search.placeholder',
+    defaultMessage: 'Search',
+    description: 'Placeholder of the course search field on Studio home',
+  },
+  searchLabel: {
+    id: 'course-authoring.studio-home.courses.search.label',
+    defaultMessage: 'search',
+    description: 'Screen reader label of the course search field',
+  },
+  searchClearButton: {
+    id: 'course-authoring.studio-home.courses.search.clear',
+    defaultMessage: 'clear search',
+    description: 'Screen reader label of the button that clears the course search field',
+  },
+  searchSubmitButton: {
+    id: 'course-authoring.studio-home.courses.search.submit',
+    defaultMessage: 'submit search',
+    description: 'Screen reader label of the button that submits the course search',
+  },
+  paginationLabel: {
+    id: 'course-authoring.studio-home.courses.pagination.label',
+    defaultMessage: 'pagination navigation',
+    description: 'Accessible name of the course list pagination',
+  },
+  paginationPrevious: {
+    id: 'course-authoring.studio-home.courses.pagination.previous',
+    defaultMessage: 'Previous',
+    description: 'Previous page button of the course list pagination',
+  },
+  paginationNext: {
+    id: 'course-authoring.studio-home.courses.pagination.next',
+    defaultMessage: 'Next',
+    description: 'Next page button of the course list pagination',
+  },
+  paginationPage: {
+    id: 'course-authoring.studio-home.courses.pagination.page',
+    defaultMessage: 'Page',
+    description: 'The word "Page" in the accessible name of a page button',
+  },
+  paginationCurrentPage: {
+    id: 'course-authoring.studio-home.courses.pagination.current-page',
+    defaultMessage: 'Current Page',
+    description: 'Accessible suffix of the page button that is currently shown',
+  },
+  paginationPageOfCount: {
+    id: 'course-authoring.studio-home.courses.pagination.page-of-count',
+    defaultMessage: 'of',
+    description: 'The word "of" in "Page 1, Current Page, of 3"',
+  },
 });
 
 export default messages;

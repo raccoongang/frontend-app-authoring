@@ -18,6 +18,7 @@ import {
   ProblemType,
   ProblemTypeKeys,
 } from '../../../../../data/constants/problem';
+import { advancedProblemStatus, advancedProblemTitle } from '../../../../../data/constants/problemTypeMessages';
 import messages from './messages';
 
 interface Props {
@@ -58,7 +59,9 @@ const AdvanceTypeSelect: React.FC<Props> = ({
               return (
                 <ActionRow className="border-primary-100 border-bottom m-0 py-3 w-100" key={type}>
                   <Form.Radio id={type} value={type}>
-                    {intl.formatMessage(messages.advanceProblemTypeLabel, { problemType: data.title })}
+                    {intl.formatMessage(messages.advanceProblemTypeLabel, {
+                      problemType: advancedProblemTitle(intl, type, data.title),
+                    })}
                   </Form.Radio>
                   <ActionRow.Spacer />
                   <OverlayTrigger
@@ -72,7 +75,9 @@ const AdvanceTypeSelect: React.FC<Props> = ({
                     )}
                   >
                     <div className="text-gray-500">
-                      {intl.formatMessage(messages.problemSupportStatus, { supportStatus: data.status })}
+                      {intl.formatMessage(messages.problemSupportStatus, {
+                        supportStatus: advancedProblemStatus(intl, data.status),
+                      })}
                     </div>
                   </OverlayTrigger>
                 </ActionRow>
@@ -81,7 +86,9 @@ const AdvanceTypeSelect: React.FC<Props> = ({
             return (
               <ActionRow className="border-primary-100 border-bottom m-0 py-3 w-100" key={type}>
                 <Form.Radio id={type} value={type}>
-                  {intl.formatMessage(messages.advanceProblemTypeLabel, { problemType: data.title })}
+                  {intl.formatMessage(messages.advanceProblemTypeLabel, {
+                    problemType: advancedProblemTitle(intl, type, data.title),
+                  })}
                 </Form.Radio>
                 <ActionRow.Spacer />
               </ActionRow>

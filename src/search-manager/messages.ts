@@ -81,6 +81,41 @@ const messages = defineMessages({
     defaultMessage: 'Drag and Drop',
     description: 'Name of the "Drag and Drop" component type in Studio',
   },
+  'blockType.about': {
+    id: 'course-authoring.course-search.blockType.about',
+    defaultMessage: 'About',
+    description: 'Name of the "About" component type in Studio search',
+  },
+  'blockType.feedback': {
+    id: 'course-authoring.course-search.blockType.feedback',
+    defaultMessage: 'Feedback',
+    description: 'Name of the "Feedback" component type in Studio search',
+  },
+  'blockType.itembank': {
+    id: 'course-authoring.course-search.blockType.itembank',
+    defaultMessage: 'Problem Bank',
+    description: 'Name of the "Problem Bank" component type in Studio search',
+  },
+  'blockType.poll': {
+    id: 'course-authoring.course-search.blockType.poll',
+    defaultMessage: 'Poll',
+    description: 'Name of the "Poll" component type in Studio search',
+  },
+  'blockType.survey': {
+    id: 'course-authoring.course-search.blockType.survey',
+    defaultMessage: 'Survey',
+    description: 'Name of the "Survey" component type in Studio search',
+  },
+  'blockType.word_cloud': {
+    id: 'course-authoring.course-search.blockType.word_cloud',
+    defaultMessage: 'Word cloud',
+    description: 'Name of the "Word cloud" component type in Studio search',
+  },
+  'blockType.done': {
+    id: 'course-authoring.course-search.blockType.done',
+    defaultMessage: 'Done',
+    description: 'Name of the "Done" component type in Studio search',
+  },
   'blockType.html': {
     id: 'course-authoring.course-search.blockType.html',
     defaultMessage: 'Text',

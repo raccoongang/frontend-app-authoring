@@ -52,9 +52,9 @@ const testCases = [
   },
   // XBlock types without an explicit label are capitalized using the textTransform style
   {
-    blockType: 'survey',
+    blockType: 'some_unlabelled-type',
     count: undefined,
-    expectedLabel: 'survey',
+    expectedLabel: 'some unlabelled type',
   },
 ];
 

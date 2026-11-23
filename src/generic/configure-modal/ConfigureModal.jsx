@@ -274,6 +274,7 @@ const ConfigureModal = ({
       isOpen={isOpen}
       onClose={onClose}
       hasCloseButton
+      closeLabel={intl.formatMessage(messages.modalCloseLabel)}
       isFullscreenOnMobile
       isOverflowVisible={false}
     >

@@ -86,6 +86,66 @@ const messages = defineMessages({
       + 'available from sources other than the Open edX community.',
     description: 'Message for support status tooltip for modules with provisional platform support',
   },
+  templateAnnouncement: {
+    id: 'course-authoring.course-unit.add.component.template.announcement',
+    defaultMessage: 'Announcement',
+    description: 'Name of a component template in the add component dialog',
+  },
+  templateAnonymousUserId: {
+    id: 'course-authoring.course-unit.add.component.template.anonymous-user-id',
+    defaultMessage: 'Anonymous User ID',
+    description: 'Name of a component template in the add component dialog',
+  },
+  templateIframeTool: {
+    id: 'course-authoring.course-unit.add.component.template.iframe-tool',
+    defaultMessage: 'IFrame Tool',
+    description: 'Name of a component template in the add component dialog',
+  },
+  templateRawHtml: {
+    id: 'course-authoring.course-unit.add.component.template.raw-html',
+    defaultMessage: 'Raw HTML',
+    description: 'Name of a component template in the add component dialog',
+  },
+  templateZoomingImageTool: {
+    id: 'course-authoring.course-unit.add.component.template.zooming-image-tool',
+    defaultMessage: 'Zooming Image Tool',
+    description: 'Name of a component template in the add component dialog',
+  },
+  templatePoll: {
+    id: 'course-authoring.course-unit.add.component.template.poll',
+    defaultMessage: 'Poll',
+    description: 'Name of a component template in the add component dialog',
+  },
+  templateSurvey: {
+    id: 'course-authoring.course-unit.add.component.template.survey',
+    defaultMessage: 'Survey',
+    description: 'Name of a component template in the add component dialog',
+  },
+  templateWordCloud: {
+    id: 'course-authoring.course-unit.add.component.template.word-cloud',
+    defaultMessage: 'Word cloud',
+    description: 'Name of a component template in the add component dialog',
+  },
+  templateSelfAssessmentOnly: {
+    id: 'course-authoring.course-unit.add.component.template.self-assessment-only',
+    defaultMessage: 'Self Assessment Only',
+    description: 'Name of a component template in the add component dialog',
+  },
+  templateStaffAssessmentOnly: {
+    id: 'course-authoring.course-unit.add.component.template.staff-assessment-only',
+    defaultMessage: 'Staff Assessment Only',
+    description: 'Name of a component template in the add component dialog',
+  },
+  templateSelfToPeer: {
+    id: 'course-authoring.course-unit.add.component.template.self-to-peer',
+    defaultMessage: 'Self Assessment to Peer Assessment',
+    description: 'Name of a component template in the add component dialog',
+  },
+  templateSelfToStaff: {
+    id: 'course-authoring.course-unit.add.component.template.self-to-staff',
+    defaultMessage: 'Self Assessment to Staff Assessment',
+    description: 'Name of a component template in the add component dialog',
+  },
 });
 
 export default messages;

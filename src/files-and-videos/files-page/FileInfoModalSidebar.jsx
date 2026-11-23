@@ -40,14 +40,16 @@ const FileInfoModalSidebar = ({
       <div className="font-weight-bold">
         <FormattedMessage {...messages.dateAddedTitle} />
       </div>
-      <FormattedDate
-        value={asset?.dateAdded}
-        year="numeric"
-        month="short"
-        day="2-digit"
-        hour="numeric"
-        minute="numeric"
-      />
+      {Number.isNaN(new Date(asset?.dateAdded).getTime()) ? asset?.dateAdded : (
+        <FormattedDate
+          value={asset?.dateAdded}
+          year="numeric"
+          month="short"
+          day="2-digit"
+          hour="numeric"
+          minute="numeric"
+        />
+      )}
       <div className="font-weight-bold mt-3">
         <FormattedMessage {...messages.fileSizeTitle} />
       </div>

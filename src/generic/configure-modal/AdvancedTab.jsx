@@ -5,12 +5,14 @@ import { Alert, Form, Hyperlink } from '@openedx/paragon';
 import {
   Warning as WarningIcon,
 } from '@openedx/paragon/icons';
-import { FormattedMessage, injectIntl } from '@edx/frontend-platform/i18n';
+import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import messages from './messages';
+import datepickerMessages from '../datepicker-control/messages';
 
 import PrereqSettings from './PrereqSettings';
 
 const AdvancedTab = ({
+  intl,
   values,
   setFieldValue,
   prereqs,
@@ -183,7 +185,7 @@ const AdvancedTab = ({
             <Form.Control
               onChange={setCurrentTimeLimit}
               value={timeLimit}
-              placeholder="HH:MM"
+              placeholder={intl.formatMessage(datepickerMessages.timePlaceholder)}
               pattern="^[0-9][0-9]:[0-5][0-9]$"
             />
           </Form.Group>
@@ -247,6 +249,7 @@ AdvancedTab.defaultProps = {
 };
 
 AdvancedTab.propTypes = {
+  intl: intlShape.isRequired,
   values: PropTypes.shape({
     isTimeLimited: PropTypes.bool.isRequired,
     defaultTimeLimitMinutes: PropTypes.number,

@@ -77,7 +77,7 @@ exports[`CoursesFilters snapshot 1`] = `
       id="dropdown-toggle-dropdown-toggle-course-type-menu"
     >
       <button
-        alt="dropdown-toggle-menu-items"
+        alt="Show the filter options"
         aria-expanded="false"
         aria-haspopup="true"
         class="dropdown-toggle-menu-items dropdown-toggle btn btn-none"
@@ -94,7 +94,7 @@ exports[`CoursesFilters snapshot 1`] = `
       id="dropdown-toggle-dropdown-toggle-courses-order-menu"
     >
       <button
-        alt="dropdown-toggle-menu-items"
+        alt="Show the filter options"
         aria-expanded="false"
         aria-haspopup="true"
         class="dropdown-toggle-menu-items dropdown-toggle btn btn-none"

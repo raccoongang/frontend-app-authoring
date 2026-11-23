@@ -8,6 +8,7 @@ import {
 } from '@edx/frontend-platform/i18n';
 import messages from './messages';
 import { ProblemTypes } from '../../../../../data/constants/problem';
+import { problemTypePreview, problemTypeTitle } from '../../../../../data/constants/problemTypeMessages';
 
 const Preview = ({
   problemType,
@@ -21,7 +22,7 @@ const Preview = ({
   return (
     <Container style={{ width: '494px', height: '400px' }} className="bg-light-300 rounded p-4">
       <div className="small">
-        {intl.formatMessage(messages.previewTitle, { previewTitle: data.title })}
+        {intl.formatMessage(messages.previewTitle, { previewTitle: problemTypeTitle(intl, problemType, data.title) })}
       </div>
       <Image
         fluid
@@ -30,7 +31,9 @@ const Preview = ({
         alt={intl.formatMessage(messages.previewAltText, { problemType })}
       />
       <div className="mb-3">
-        {intl.formatMessage(messages.previewDescription, { previewDescription: data.previewDescription })}
+        {intl.formatMessage(messages.previewDescription, {
+          previewDescription: problemTypePreview(intl, problemType, data.previewDescription),
+        })}
       </div>
       <Hyperlink
         destination={data.helpLink}

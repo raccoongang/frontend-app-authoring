@@ -20,6 +20,7 @@ import { useEventListener } from '../../generic/hooks';
 import VideoSelectorPage from '../../editors/VideoSelectorPage';
 import EditorPage from '../../editors/EditorPage';
 import { fetchCourseSectionVerticalData } from '../data/thunk';
+import { getDefaultBlockName } from '../../generic/default-names';
 
 const AddComponent = ({
   parentLocator,
@@ -125,10 +126,20 @@ const AddComponent = ({
         // TODO: The library functional will be a bit different of current legacy (CMS)
         //  behaviour and this ticket is on hold (blocked by other development team).
       case COMPONENT_TYPES.library:
-        handleCreateNewCourseXBlock({ type, category: 'library_content', parentLocator: blockId });
+        handleCreateNewCourseXBlock({
+          type,
+          category: 'library_content',
+          parentLocator: blockId,
+          displayName: getDefaultBlockName('library_content'),
+        });
         break;
       case COMPONENT_TYPES.itembank:
-        handleCreateNewCourseXBlock({ type, category: 'itembank', parentLocator: blockId });
+        handleCreateNewCourseXBlock({
+          type,
+          category: 'itembank',
+          parentLocator: blockId,
+          displayName: getDefaultBlockName('itembank'),
+        });
         break;
       case COMPONENT_TYPES.libraryV2:
         showAddLibraryContentModal();

@@ -58,10 +58,10 @@ describe('HeaderButtons Component', () => {
 
     expect(previewLink).toHaveAttribute('href', expect.stringContaining(certificatesDataMock.courseModes[0]));
 
-    const dropdownButton = getByRole('button', { name: certificatesDataMock.courseModes[0] });
+    const dropdownButton = getByRole('button', { name: messages.courseModeHonor.defaultMessage });
     userEvent.click(dropdownButton);
 
-    const verifiedMode = await getByRole('button', { name: certificatesDataMock.courseModes[1] });
+    const verifiedMode = await getByRole('button', { name: messages.courseModeAudit.defaultMessage });
     userEvent.click(verifiedMode);
 
     await waitFor(() => {

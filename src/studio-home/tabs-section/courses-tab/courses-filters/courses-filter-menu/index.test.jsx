@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { screen, fireEvent, render } from '@testing-library/react';
+import { IntlProvider } from '@edx/frontend-platform/i18n';
 
 import CoursesFilterMenu from '.';
 
@@ -31,12 +32,14 @@ describe('CoursesFilterMenu', () => {
   ];
 
   const renderComponent = (overrideProps = {}) => render(
-    <CoursesFilterMenu
-      menuItems={menuItemsMock}
-      onItemMenuSelected={onCourseTypeSelectedMock}
-      id="course-filter-menu-toggle"
-      {...overrideProps}
-    />,
+    <IntlProvider locale="en" messages={{}}>
+      <CoursesFilterMenu
+        menuItems={menuItemsMock}
+        onItemMenuSelected={onCourseTypeSelectedMock}
+        id="course-filter-menu-toggle"
+        {...overrideProps}
+      />
+    </IntlProvider>,
   );
 
   beforeEach(() => {

@@ -10,6 +10,22 @@ import AddComponentButton from '../add-component-btn';
 import messages from '../messages';
 import ModalContainer from './ModalContainer';
 
+// Template names come from the CMS in English; the ones with a message here are shown translated.
+const TEMPLATE_NAME_MESSAGES = {
+  announcement: messages.templateAnnouncement,
+  'anonymous user id': messages.templateAnonymousUserId,
+  'iframe tool': messages.templateIframeTool,
+  'raw html': messages.templateRawHtml,
+  'zooming image tool': messages.templateZoomingImageTool,
+  poll: messages.templatePoll,
+  survey: messages.templateSurvey,
+  'word cloud': messages.templateWordCloud,
+  'self assessment only': messages.templateSelfAssessmentOnly,
+  'staff assessment only': messages.templateStaffAssessmentOnly,
+  'self assessment to peer assessment': messages.templateSelfToPeer,
+  'self assessment to staff assessment': messages.templateSelfToStaff,
+};
+
 const ComponentModalView = ({
   component,
   modalParams,
@@ -24,6 +40,10 @@ const ComponentModalView = ({
     type, displayName, templates, supportLegend,
   } = component;
   const supportLabels = getXBlockSupportMessages(intl);
+  const templateName = (name) => {
+    const message = TEMPLATE_NAME_MESSAGES[(name ?? '').toLowerCase()];
+    return message ? intl.formatMessage(message) : name;
+  };
 
   const handleSubmit = () => {
     handleCreateNewXBlock(type, moduleTitle);
@@ -71,7 +91,7 @@ const ComponentModalView = ({
                     className="add-component-modal-radio"
                     value={value}
                   >
-                    {componentTemplate.displayName}
+                    {templateName(componentTemplate.displayName)}
                   </Form.Radio>
                   {isDisplaySupportLabel && (
                     <OverlayTrigger

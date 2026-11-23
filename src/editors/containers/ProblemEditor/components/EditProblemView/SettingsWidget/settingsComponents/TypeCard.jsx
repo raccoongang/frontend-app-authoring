@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from '@edx/frontend-platform/i18n';
 import SettingsOption from '../SettingsOption';
 import { ProblemTypeKeys, ProblemTypes } from '../../../../../../data/constants/problem';
+import { problemTypeTitle } from '../../../../../../data/constants/problemTypeMessages';
 import messages from '../messages';
 import TypeRow from './TypeRow';
 
@@ -24,7 +25,7 @@ const TypeCard = ({
   return (
     <SettingsOption
       title={intl.formatMessage(messages.typeSettingTitle)}
-      summary={ProblemTypes[problemType].title}
+      summary={problemTypeTitle(intl, problemType, ProblemTypes[problemType].title)}
     >
       {problemTypeKeysArray.map((typeKey, i) => (
         <TypeRow
@@ -33,7 +34,7 @@ const TypeCard = ({
           correctAnswerCount={correctAnswerCount}
           key={typeKey}
           typeKey={typeKey}
-          label={ProblemTypes[typeKey].title}
+          label={problemTypeTitle(intl, typeKey, ProblemTypes[typeKey].title)}
           selected={typeKey !== problemType}
           problemType={problemType}
           lastRow={(i + 1) === problemTypeKeysArray.length}

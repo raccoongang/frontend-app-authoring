@@ -252,6 +252,7 @@ describe('<AddComponent />', () => {
       parentLocator: '123',
       type: COMPONENT_TYPES.itembank,
       category: 'itembank',
+      displayName: 'Problem Bank',
     });
   });
 
@@ -283,6 +284,7 @@ describe('<AddComponent />', () => {
       parentLocator: '123',
       category: 'library_content',
       type: COMPONENT_TYPES.library,
+      displayName: 'Randomized Content Block',
     });
   });
 

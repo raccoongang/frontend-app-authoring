@@ -54,6 +54,7 @@ import {
   updateCourseLaunchQueryStatus,
 } from './slice';
 import { createCourseXblock } from '../../course-unit/data/api';
+import { getDefaultBlockName } from '../../generic/default-names';
 
 export function fetchCourseOutlineIndexQuery(courseId) {
   return async (dispatch) => {
@@ -503,7 +504,7 @@ export function addNewSectionQuery(parentLocator) {
     dispatch(addNewCourseItemQuery(
       parentLocator,
       COURSE_BLOCK_NAMES.chapter.id,
-      COURSE_BLOCK_NAMES.chapter.name,
+      getDefaultBlockName(COURSE_BLOCK_NAMES.chapter.id) || COURSE_BLOCK_NAMES.chapter.name,
       async (result) => {
         const data = await getCourseItem(result.locator);
         // Page should scroll to newly created section.
@@ -519,7 +520,7 @@ export function addNewSubsectionQuery(parentLocator) {
     dispatch(addNewCourseItemQuery(
       parentLocator,
       COURSE_BLOCK_NAMES.sequential.id,
-      COURSE_BLOCK_NAMES.sequential.name,
+      getDefaultBlockName(COURSE_BLOCK_NAMES.sequential.id) || COURSE_BLOCK_NAMES.sequential.name,
       async (result) => {
         const data = await getCourseItem(result.locator);
         // Page should scroll to newly created subsection.
@@ -535,7 +536,7 @@ export function addNewUnitQuery(parentLocator, callback) {
     dispatch(addNewCourseItemQuery(
       parentLocator,
       COURSE_BLOCK_NAMES.vertical.id,
-      COURSE_BLOCK_NAMES.vertical.name,
+      getDefaultBlockName(COURSE_BLOCK_NAMES.vertical.id) || COURSE_BLOCK_NAMES.vertical.name,
       async (result) => callback(result.locator),
     ));
   };

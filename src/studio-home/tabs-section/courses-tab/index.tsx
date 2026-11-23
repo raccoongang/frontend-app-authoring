@@ -23,6 +23,7 @@ import ProcessingCourses from '../../processing-courses';
 import { LoadingSpinner } from '../../../generic/Loading';
 import AlertMessage from '../../../generic/alert-message';
 import messages from '../messages';
+import homeMessages from '../../messages';
 import './index.scss';
 
 interface Props {
@@ -175,7 +176,14 @@ const CoursesTab: React.FC<Props> = ({
             {numPages > 1 && isEnabledPagination && (
               <Pagination
                 className="d-flex justify-content-center"
-                paginationLabel="pagination navigation"
+                paginationLabel={intl.formatMessage(homeMessages.paginationLabel)}
+                buttonLabels={{
+                  previous: intl.formatMessage(homeMessages.paginationPrevious),
+                  next: intl.formatMessage(homeMessages.paginationNext),
+                  page: intl.formatMessage(homeMessages.paginationPage),
+                  currentPage: intl.formatMessage(homeMessages.paginationCurrentPage),
+                  pageOfCount: intl.formatMessage(homeMessages.paginationPageOfCount),
+                }}
                 pageCount={numPages}
                 currentPage={currentPage}
                 onPageSelect={handlePageSelected}

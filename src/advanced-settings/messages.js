@@ -81,6 +81,11 @@ const messages = defineMessages({
     id: 'course-authoring.advanced-settings.alert.proctoring.error.aria.describedby',
     defaultMessage: 'alert-danger-description',
   },
+  policyWarningLabel: {
+    id: 'course-authoring.advanced-settings.policies.warning-label',
+    defaultMessage: 'Warning:',
+    description: 'Bold lead-in of the notice above the policy settings',
+  },
 });
 
 export default messages;

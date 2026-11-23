@@ -5,10 +5,17 @@ import classNames from 'classnames';
 import { Form, Icon } from '@openedx/paragon';
 import { Calendar } from '@openedx/paragon/icons';
 import { useIntl } from '@edx/frontend-platform/i18n';
+// date-fns is react-datepicker's own dependency and the calendar needs its locale objects; it is
+// not listed in package.json. Adding it there is a separate decision (it changes the lock file).
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { uk } from 'date-fns/locale';
 
 import { convertToDateFromString, convertToStringFromDate, isValidDate } from '../../utils';
 import { DATE_FORMAT, TIME_FORMAT } from '../../constants';
 import messages from './messages';
+
+// Month and weekday names of the calendar; English is the library default.
+const DATE_FNS_LOCALES = { uk };
 
 export const DATEPICKER_TYPES = {
   date: 'date',
@@ -65,7 +72,12 @@ const DatepickerControl = ({
           selectsStart
           showTimeSelect={type === DATEPICKER_TYPES.time}
           showTimeSelectOnly={type === DATEPICKER_TYPES.time}
-          placeholderText={inputFormat[type].toLocaleUpperCase()}
+          placeholderText={intl.formatMessage(
+            type === DATEPICKER_TYPES.date ? messages.datePlaceholder : messages.timePlaceholder,
+          )}
+          locale={DATE_FNS_LOCALES[intl.locale?.split('-')[0]]}
+          previousMonthButtonLabel={intl.formatMessage(messages.previousMonth)}
+          nextMonthButtonLabel={intl.formatMessage(messages.nextMonth)}
           showPopperArrow={false}
           onChange={(date) => {
             if (isValidDate(date)) {

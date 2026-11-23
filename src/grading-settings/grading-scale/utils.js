@@ -64,7 +64,10 @@ export const getLettersOnLongScale = (idx, letters, gradingSegments) => {
 export const getLettersOnShortScale = (idx, letters, intl) => {
   const END_OF_SCALE_NAME = intl.formatMessage(messages.segmentFailGradingText);
 
-  return (idx === 1 ? letters[idx - 1] : END_OF_SCALE_NAME);
+  // The server names the single cut-off of a new course "Pass"; only the label shown is translated.
+  const passName = letters[idx - 1] === 'Pass' ? intl.formatMessage(messages.defaultPassText) : letters[idx - 1];
+
+  return (idx === 1 ? passName : END_OF_SCALE_NAME);
 };
 
 /**

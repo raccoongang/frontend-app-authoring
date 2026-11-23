@@ -13,6 +13,9 @@ import {
 } from '@tanstack/react-query';
 
 import { initializeHotjar } from '@edx/frontend-enterprise-hotjar';
+import { getLocale } from '@edx/frontend-platform/i18n';
+import moment from 'moment';
+import 'moment/locale/uk';
 import { logError } from '@edx/frontend-platform/logging';
 import messages from './i18n';
 
@@ -114,6 +117,11 @@ const App = () => {
 };
 
 subscribe(APP_READY, () => {
+  // public/index.html ships lang="en-us"; follow the language the page is actually shown in.
+  document.documentElement.lang = getLocale();
+  // Dates formatted with moment (course updates and so on) follow the same language.
+  moment.locale(getLocale());
+
   const root = createRoot(document.getElementById('root'));
 
   root.render(

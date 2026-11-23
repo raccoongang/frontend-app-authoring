@@ -13,6 +13,46 @@ const messages = defineMessages({
     id: 'course-authoring.certificates.heading.subtitle',
     defaultMessage: 'Settings',
   },
+  courseModeHonor: {
+    id: 'course-authoring.certificates.course-mode.honor',
+    defaultMessage: 'Honor',
+    description: 'Name of an enrolment mode in the certificate preview mode list',
+  },
+  courseModeVerified: {
+    id: 'course-authoring.certificates.course-mode.verified',
+    defaultMessage: 'Verified',
+    description: 'Name of an enrolment mode in the certificate preview mode list',
+  },
+  courseModeProfessional: {
+    id: 'course-authoring.certificates.course-mode.professional',
+    defaultMessage: 'Professional',
+    description: 'Name of an enrolment mode in the certificate preview mode list',
+  },
+  courseModeNoIdProfessional: {
+    id: 'course-authoring.certificates.course-mode.no-id-professional',
+    defaultMessage: 'Professional (no ID)',
+    description: 'Name of an enrolment mode in the certificate preview mode list',
+  },
+  courseModeAudit: {
+    id: 'course-authoring.certificates.course-mode.audit',
+    defaultMessage: 'Audit',
+    description: 'Name of an enrolment mode in the certificate preview mode list',
+  },
+  courseModeCredit: {
+    id: 'course-authoring.certificates.course-mode.credit',
+    defaultMessage: 'Credit',
+    description: 'Name of an enrolment mode in the certificate preview mode list',
+  },
+  courseModeMasters: {
+    id: 'course-authoring.certificates.course-mode.masters',
+    defaultMessage: 'Masters',
+    description: 'Name of an enrolment mode in the certificate preview mode list',
+  },
+  courseModeExecutiveEducation: {
+    id: 'course-authoring.certificates.course-mode.executive-education',
+    defaultMessage: 'Executive education',
+    description: 'Name of an enrolment mode in the certificate preview mode list',
+  },
   headingActionsPreview: {
     id: 'course-authoring.certificates.heading.action.button.preview',
     defaultMessage: 'Preview certificate',
