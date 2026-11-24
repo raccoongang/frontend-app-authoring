@@ -7,7 +7,6 @@ import {
   CardView,
   DataTable,
   Dropzone,
-  TextFilter,
   useToggle,
 } from '@openedx/paragon';
 
@@ -20,6 +19,7 @@ import { sortFiles } from './utils';
 import messages from './messages';
 
 import InfoModal from './InfoModal';
+import SearchFilter from './SearchFilter';
 import FileInput, { useFileInput } from './FileInput';
 import {
   GalleryCard,
@@ -206,7 +206,7 @@ const FileTable = ({
         isSortable
         isSelectable
         isPaginated
-        defaultColumnValues={{ Filter: TextFilter }}
+        defaultColumnValues={{ Filter: SearchFilter }}
         dataViewToggleOptions={{
           isDataViewToggleEnabled: true,
           onDataViewToggle: (val) => {

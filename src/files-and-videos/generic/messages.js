@@ -1,6 +1,11 @@
 import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
+  searchColumn: {
+    id: 'course-authoring.files-and-videos.table.search',
+    defaultMessage: 'Search {column}',
+    description: 'Placeholder of the search field above a table column, e.g. "Search file name"',
+  },
   cardViewTooltip: {
     id: 'course-authoring.files-and-videos.table.view.card.tooltip',
     defaultMessage: 'Card view',
