@@ -100,7 +100,11 @@ const AddComponent = ({
     const list = Array.isArray(componentTemplates) ? componentTemplates : Object.values(componentTemplates);
     const template = list.find((component) => component?.type === type)
       ?.templates?.find((item) => (item.boilerplateName || item.category) === boilerplate);
-    const message = TEMPLATE_NAME_MESSAGES[(template?.displayName ?? '').toLowerCase()];
+    const name = (template?.displayName ?? '').toLowerCase();
+    if (name === 'text') {
+      return getDefaultBlockName('html');
+    }
+    const message = TEMPLATE_NAME_MESSAGES[name];
     return message ? intl.formatMessage(message) : undefined;
   };
 

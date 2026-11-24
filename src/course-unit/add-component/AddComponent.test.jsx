@@ -422,6 +422,7 @@ describe('<AddComponent />', () => {
       parentLocator: '123',
       type: COMPONENT_TYPES.html,
       boilerplate: COMPONENT_TYPES.html,
+      displayName: 'Text',
     }, expect.any(Function));
   });
 
