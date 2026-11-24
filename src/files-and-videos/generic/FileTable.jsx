@@ -12,7 +12,6 @@ import {
 
 // Paragon's card/list toggle has fixed English texts and no props for them;
 // its constant is shared, so they are set below.
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { DATA_VIEW_TOGGLE_VALUES } from '@openedx/paragon/dist/DataTable/DataViewToggle';
 import { RequestStatus } from '../../data/constants';
 import { sortFiles } from './utils';

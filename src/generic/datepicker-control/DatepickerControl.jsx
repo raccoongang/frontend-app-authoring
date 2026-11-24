@@ -5,9 +5,6 @@ import classNames from 'classnames';
 import { Form, Icon } from '@openedx/paragon';
 import { Calendar } from '@openedx/paragon/icons';
 import { useIntl } from '@edx/frontend-platform/i18n';
-// date-fns is react-datepicker's own dependency and the calendar needs its locale objects; it is
-// not listed in package.json. Adding it there is a separate decision (it changes the lock file).
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { uk } from 'date-fns/locale';
 
 import { convertToDateFromString, convertToStringFromDate, isValidDate } from '../../utils';
