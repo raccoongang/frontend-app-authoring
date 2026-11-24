@@ -49,16 +49,16 @@ const ShowAnswerCard = ({
           onChange={handleShowAnswerChange}
         >
           {Object.values(ShowAnswerTypesKeys).map((answerType) => {
-            let optionDisplayName = ShowAnswerTypes[answerType];
+            let optionDisplayName = intl.formatMessage(ShowAnswerTypes[answerType]);
             if (answerType === defaultValue) {
-              optionDisplayName = { ...optionDisplayName, defaultMessage: `${optionDisplayName.defaultMessage} (Default)` };
+              optionDisplayName = intl.formatMessage(messages.defaultValueLabel, { value: optionDisplayName });
             }
             return (
               <option
                 key={answerType}
                 value={answerType}
               >
-                {intl.formatMessage(optionDisplayName)}
+                {optionDisplayName}
               </option>
             );
           })}

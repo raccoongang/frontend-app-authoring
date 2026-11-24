@@ -207,6 +207,11 @@ const messages = defineMessages({
     defaultMessage: 'Provide an explanation for the correct answer.',
     description: 'Solution Explanation text',
   },
+  defaultValueLabel: {
+    id: 'authoring.problemeditor.settings.defaultValueLabel',
+    defaultMessage: '{value} (Default)',
+    description: 'A setting value marked as the course default, e.g. the number of attempts or a show answer option',
+  },
 });
 
 export default messages;

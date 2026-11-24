@@ -116,10 +116,12 @@ export const resetCardHooks = (updateSettings) => {
   };
 };
 
+const defaultValueLabel = (value) => getAppIntl().formatMessage(messages.defaultValueLabel, { value });
+
 export const scoringCardHooks = (scoring, updateSettings, defaultValue) => {
   let loadedAttemptsNumber = scoring.attempts.number;
   if ((loadedAttemptsNumber === defaultValue || !isFinite(loadedAttemptsNumber)) && isFinite(defaultValue)) {
-    loadedAttemptsNumber = `${defaultValue} (Default)`;
+    loadedAttemptsNumber = defaultValueLabel(defaultValue);
   } else if (loadedAttemptsNumber === defaultValue && isNil(defaultValue)) {
     loadedAttemptsNumber = '';
   }
@@ -142,7 +144,7 @@ export const scoringCardHooks = (scoring, updateSettings, defaultValue) => {
     if (!isFinite(attemptNumber) || attemptNumber === defaultValue) {
       attemptNumber = null;
       if (isFinite(defaultValue)) {
-        setAttemptDisplayValue(`${defaultValue} (Default)`);
+        setAttemptDisplayValue(defaultValueLabel(defaultValue));
       } else {
         setAttemptDisplayValue('');
         unlimitedAttempts = true;
@@ -157,7 +159,7 @@ export const scoringCardHooks = (scoring, updateSettings, defaultValue) => {
   const handleOnChange = (event) => {
     let newMaxAttempt = parseInt(event.target.value, 10);
     if (newMaxAttempt === defaultValue) {
-      newMaxAttempt = `${defaultValue} (Default)`;
+      newMaxAttempt = defaultValueLabel(defaultValue);
     } else if (isNaN(newMaxAttempt)) {
       newMaxAttempt = '';
     } else if (newMaxAttempt < 0) {

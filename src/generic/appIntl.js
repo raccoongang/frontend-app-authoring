@@ -15,7 +15,12 @@ export const getAppIntl = () => {
       return createIntl({ locale: 'en', onError: () => {} });
     } catch (fallbackError) {
       // Nothing to format with (i18n is replaced in some tests): the English text is the answer.
-      return { formatMessage: (message) => message.defaultMessage };
+      return {
+        formatMessage: (message, values = {}) => message.defaultMessage.replace(
+          /\{(\w+)\}/g,
+          (placeholder, name) => (name in values ? String(values[name]) : placeholder),
+        ),
+      };
     }
   }
 };
