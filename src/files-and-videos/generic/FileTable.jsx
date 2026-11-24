@@ -11,6 +11,10 @@ import {
   useToggle,
 } from '@openedx/paragon';
 
+// Paragon's card/list toggle has fixed English texts and no props for them;
+// its constant is shared, so they are set below.
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { DATA_VIEW_TOGGLE_VALUES } from '@openedx/paragon/dist/DataTable/DataViewToggle';
 import { RequestStatus } from '../../data/constants';
 import { sortFiles } from './utils';
 import messages from './messages';
@@ -188,6 +192,11 @@ const FileTable = ({
   if (!hasMoreInfoColumn) {
     tableColumns.push({ ...moreInfoColumn });
   }
+
+  DATA_VIEW_TOGGLE_VALUES.card.tooltipContent = intl.formatMessage(messages.cardViewTooltip);
+  DATA_VIEW_TOGGLE_VALUES.card.alt = intl.formatMessage(messages.cardViewAlt);
+  DATA_VIEW_TOGGLE_VALUES.list.tooltipContent = intl.formatMessage(messages.listViewTooltip);
+  DATA_VIEW_TOGGLE_VALUES.list.alt = intl.formatMessage(messages.listViewAlt);
 
   return (
     <div className="files-table">

@@ -1,6 +1,26 @@
 import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
+  cardViewTooltip: {
+    id: 'course-authoring.files-and-videos.table.view.card.tooltip',
+    defaultMessage: 'Card view',
+    description: 'Tooltip of the button that shows the files as cards',
+  },
+  cardViewAlt: {
+    id: 'course-authoring.files-and-videos.table.view.card.alt',
+    defaultMessage: 'Card',
+    description: 'Accessible name of the button that shows the files as cards',
+  },
+  listViewTooltip: {
+    id: 'course-authoring.files-and-videos.table.view.list.tooltip',
+    defaultMessage: 'List view',
+    description: 'Tooltip of the button that shows the files as a list',
+  },
+  listViewAlt: {
+    id: 'course-authoring.files-and-videos.table.view.list.alt',
+    defaultMessage: 'List',
+    description: 'Accessible name of the button that shows the files as a list',
+  },
   columnFileName: {
     id: 'course-authoring.files-and-videos.table.column.file-name',
     defaultMessage: 'File name',

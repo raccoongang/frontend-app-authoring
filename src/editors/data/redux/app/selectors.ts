@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
+import { getDefaultBlockName } from '../../../../generic/default-names';
 import type { EditorState } from '..';
-import { blockTypes } from '../../constants/app';
 import { isLibraryKey, isLibraryV1Key } from '../../../../generic/key-utils';
 import * as urls from '../../services/cms/urls';
 
@@ -99,9 +99,7 @@ export const displayTitle = createSelector(
     if (blockTitle !== null) {
       return blockTitle;
     }
-    return (blockType === blockTypes.html)
-      ? 'Text'
-      : blockType[0].toUpperCase() + blockType.substring(1);
+    return getDefaultBlockName(blockType) || blockType[0].toUpperCase() + blockType.substring(1);
   },
 );
 
