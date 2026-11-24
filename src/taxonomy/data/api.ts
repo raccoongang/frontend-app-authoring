@@ -1,6 +1,7 @@
 import { camelCaseObject, getConfig } from '@edx/frontend-platform';
 import { getAuthenticatedHttpClient } from '@edx/frontend-platform/auth';
 import type { TaxonomyData, TaxonomyListData } from './types';
+import { localizeTaxonomy } from './systemTaxonomies';
 
 const getApiBaseUrl = () => getConfig().STUDIO_BASE_URL;
 const getTaxonomiesV1Endpoint = () => new URL('api/content_tagging/v1/taxonomies/', getApiBaseUrl()).href;
@@ -82,7 +83,8 @@ export const apiUrls = {
  */
 export async function getTaxonomyListData(org?: string): Promise<TaxonomyListData> {
   const { data } = await getAuthenticatedHttpClient().get(apiUrls.taxonomyList(org));
-  return camelCaseObject(data);
+  const list: TaxonomyListData = camelCaseObject(data);
+  return { ...list, results: list.results?.map(localizeTaxonomy) };
 }
 
 /**
@@ -98,7 +100,7 @@ export async function deleteTaxonomy(taxonomyId: number): Promise<void> {
  */
 export async function getTaxonomy(taxonomyId: number): Promise<TaxonomyData> {
   const { data } = await getAuthenticatedHttpClient().get(apiUrls.taxonomy(taxonomyId));
-  return camelCaseObject(data);
+  return localizeTaxonomy(camelCaseObject(data));
 }
 
 /**
