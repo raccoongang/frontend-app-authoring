@@ -426,6 +426,40 @@ describe('<AddComponent />', () => {
     }, expect.any(Function));
   });
 
+  it('names a "Text" block even when the CMS sends the template name translated', async () => {
+    axiosMock
+      .onGet(getCourseSectionVerticalApiUrl(blockId))
+      .reply(200, {
+        ...courseSectionVerticalMock,
+        component_templates: courseSectionVerticalMock.component_templates.map((component) => (
+          component.type === COMPONENT_TYPES.html
+            ? {
+              ...component,
+              templates: component.templates.map((template) => (
+                template.display_name === 'Text' ? { ...template, display_name: 'Текст' } : template
+              )),
+            }
+            : component
+        )),
+      });
+    await executeThunk(fetchCourseSectionVerticalData(blockId), store.dispatch);
+
+    const { getByRole } = renderComponent();
+    userEvent.click(getByRole('button', {
+      name: new RegExp(`${messages.buttonText.defaultMessage} Text`, 'i'),
+    }));
+    const modalContainer = getByRole('dialog');
+    userEvent.click(within(modalContainer).getByRole('radio', { name: 'Текст' }));
+    userEvent.click(within(modalContainer).getByRole('button', { name: messages.modalBtnText.defaultMessage }));
+
+    expect(handleCreateNewCourseXBlockMock).toHaveBeenCalledWith({
+      parentLocator: '123',
+      type: COMPONENT_TYPES.html,
+      boilerplate: COMPONENT_TYPES.html,
+      displayName: 'Text',
+    }, expect.any(Function));
+  });
+
   it('verifies "Open Response" component creation and submission in modal', () => {
     const { getByRole } = renderComponent();
     const openResponseButton = getByRole('button', {

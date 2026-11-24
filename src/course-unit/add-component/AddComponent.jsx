@@ -101,11 +101,14 @@ const AddComponent = ({
     const template = list.find((component) => component?.type === type)
       ?.templates?.find((item) => (item.boilerplateName || item.category) === boilerplate);
     const name = (template?.displayName ?? '').toLowerCase();
-    if (name === 'text') {
-      return getDefaultBlockName('html');
+    // The plain "Text" template is picked by the block type itself.
+    if (!template || boilerplate === type || name === 'text') {
+      return getDefaultBlockName(type);
     }
     const message = TEMPLATE_NAME_MESSAGES[name];
-    return message ? intl.formatMessage(message) : undefined;
+    // The CMS may send the template name already translated; a block sent
+    // without a name shows its English default ("Text") in Studio.
+    return message ? intl.formatMessage(message) : template.displayName || getDefaultBlockName(type);
   };
 
   const handleCreateNewXBlock = (type, moduleName) => {
