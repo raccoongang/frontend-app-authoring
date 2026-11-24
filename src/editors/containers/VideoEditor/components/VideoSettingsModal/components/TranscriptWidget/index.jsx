@@ -19,6 +19,7 @@ import {
 import { Add, InfoOutline } from '@openedx/paragon/icons';
 
 import { thunkActions, actions, selectors } from '../../../../../../data/redux';
+import { getAppIntl } from '../../../../../../../generic/appIntl';
 import messages from './messages';
 
 import { RequestKeys } from '../../../../../../data/constants/requests';
@@ -41,10 +42,10 @@ export const hooks = {
   // eslint-disable-next-line react-hooks/rules-of-hooks
     const [error, setError] = React.useContext(ErrorContext).transcripts;
     if (isUploadError) {
-      setError({ ...error, uploadError: messages.uploadTranscriptError.defaultMessage });
+      setError({ ...error, uploadError: getAppIntl().formatMessage(messages.uploadTranscriptError) });
     }
     if (isDeleteError) {
-      setError({ ...error, deleteError: messages.deleteTranscriptError.defaultMessage });
+      setError({ ...error, deleteError: getAppIntl().formatMessage(messages.deleteTranscriptError) });
     }
   },
   transcriptLanguages: (transcripts, intl) => {

@@ -1,6 +1,46 @@
 import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
+  columnFileName: {
+    id: 'course-authoring.files-and-videos.table.column.file-name',
+    defaultMessage: 'File name',
+    description: 'Column heading of the file name',
+  },
+  columnFileSize: {
+    id: 'course-authoring.files-and-videos.table.column.file-size',
+    defaultMessage: 'File size',
+    description: 'Column heading of the file size',
+  },
+  columnType: {
+    id: 'course-authoring.files-and-videos.table.column.type',
+    defaultMessage: 'Type',
+    description: 'Column heading of the file type',
+  },
+  columnActive: {
+    id: 'course-authoring.files-and-videos.table.column.active',
+    defaultMessage: 'Active',
+    description: 'Column heading telling whether a file is active',
+  },
+  columnAccess: {
+    id: 'course-authoring.files-and-videos.table.column.access',
+    defaultMessage: 'Access',
+    description: 'Column heading of the file access (public or locked)',
+  },
+  columnTranscript: {
+    id: 'course-authoring.files-and-videos.table.column.transcript',
+    defaultMessage: 'Transcript',
+    description: 'Column heading of the video transcripts',
+  },
+  columnVideoLength: {
+    id: 'course-authoring.files-and-videos.table.column.video-length',
+    defaultMessage: 'Video length',
+    description: 'Column heading of the video length',
+  },
+  columnStatus: {
+    id: 'course-authoring.files-and-videos.table.column.status',
+    defaultMessage: 'Status',
+    description: 'Column heading of the video status',
+  },
   fileInputLabel: {
     id: 'course-authoring.files-and-videos.generic.fileInput.label',
     defaultMessage: 'file-input',

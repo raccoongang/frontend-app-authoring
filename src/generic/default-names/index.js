@@ -9,6 +9,9 @@ export const getDefaultBlockName = (category) => {
     vertical: messages.vertical,
     library_content: messages.libraryContent,
     itembank: messages.itembank,
+    html: messages.html,
+    video: messages.video,
+    problem: messages.problem,
   }[category];
   return message ? getAppIntl().formatMessage(message) : '';
 };

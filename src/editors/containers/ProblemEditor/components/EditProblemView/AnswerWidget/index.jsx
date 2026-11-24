@@ -4,6 +4,7 @@ import { FormattedMessage, injectIntl, intlShape } from '@edx/frontend-platform/
 
 import messages from './messages';
 import { ProblemTypes } from '../../../../../data/constants/problem';
+import { problemTypeDescription } from '../../../../../data/constants/problemTypeMessages';
 import AnswersContainer from './AnswersContainer';
 
 // This widget should be connected, grab all answers from store, update them as needed.
@@ -21,7 +22,9 @@ const AnswerWidget = ({
           <FormattedMessage {...messages.answerWidgetTitle} />
         </div>
         <div className="small">
-          {intl.formatMessage(messages.answerHelperText, { helperText: problemStaticData.description })}
+          {intl.formatMessage(messages.answerHelperText, {
+            helperText: problemTypeDescription(intl, problemType, problemStaticData.description),
+          })}
         </div>
       </div>
       <AnswersContainer problemType={problemType} />

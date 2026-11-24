@@ -11,7 +11,7 @@ import messages from '../messages';
 import ModalContainer from './ModalContainer';
 
 // Template names come from the CMS in English; the ones with a message here are shown translated.
-const TEMPLATE_NAME_MESSAGES = {
+export const TEMPLATE_NAME_MESSAGES = {
   announcement: messages.templateAnnouncement,
   'anonymous user id': messages.templateAnonymousUserId,
   'iframe tool': messages.templateIframeTool,

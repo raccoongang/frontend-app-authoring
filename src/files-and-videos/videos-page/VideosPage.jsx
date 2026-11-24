@@ -31,6 +31,7 @@ import {
   cancelAllUploads,
   newUploadData,
 } from './data/thunks';
+import genericMessages from '../generic/messages';
 import messages from './messages';
 import VideosPageProvider from './VideosPageProvider';
 import getPageHeadTitle from '../../generic/utils';
@@ -177,7 +178,7 @@ const VideosPage = ({
   const maxFileSize = videoUploadMaxFileSize * 1073741824;
   const transcriptColumn = {
     id: 'transcriptStatus',
-    Header: 'Transcript',
+    Header: intl.formatMessage(genericMessages.columnTranscript),
     accessor: 'transcriptStatus',
     Cell: ({ row }) => TranscriptColumn({ row }),
     Filter: CheckboxFilter,
@@ -195,7 +196,7 @@ const VideosPage = ({
   };
   const activeColumn = {
     id: 'activeStatus',
-    Header: 'Active',
+    Header: intl.formatMessage(genericMessages.columnActive),
     accessor: 'activeStatus',
     Cell: ({ row }) => ActiveColumn({ row, pageLoadStatus: loadingStatus }),
     Filter: CheckboxFilter,
@@ -207,7 +208,7 @@ const VideosPage = ({
   };
   const durationColumn = {
     id: 'duration',
-    Header: 'Video length',
+    Header: intl.formatMessage(genericMessages.columnVideoLength),
     accessor: 'duration',
     Cell: ({ row }) => {
       const { duration } = row.original;
@@ -216,7 +217,7 @@ const VideosPage = ({
   };
   const processingStatusColumn = {
     id: 'status',
-    Header: 'Status',
+    Header: intl.formatMessage(genericMessages.columnStatus),
     accessor: 'status',
     Cell: ({ row }) => StatusColumn({ row }),
     Filter: CheckboxFilter,
@@ -234,7 +235,7 @@ const VideosPage = ({
   const tableColumns = [
     { ...videoThumbnailColumn },
     {
-      Header: 'File name',
+      Header: intl.formatMessage(genericMessages.columnFileName),
       accessor: 'clientVideoId',
     },
     { ...durationColumn },

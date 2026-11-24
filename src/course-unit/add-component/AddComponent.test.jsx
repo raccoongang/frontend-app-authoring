@@ -236,6 +236,7 @@ describe('<AddComponent />', () => {
     expect(handleCreateNewCourseXBlockMock).toHaveBeenCalledWith({
       parentLocator: '123',
       type: COMPONENT_TYPES.problem,
+      displayName: 'Blank Problem',
     }, expect.any(Function));
   });
 
@@ -268,6 +269,7 @@ describe('<AddComponent />', () => {
     expect(handleCreateNewCourseXBlockMock).toHaveBeenCalledWith({
       parentLocator: '123',
       type: COMPONENT_TYPES.video,
+      displayName: 'Video',
     }, expect.any(Function));
   });
 

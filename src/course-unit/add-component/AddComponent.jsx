@@ -10,7 +10,7 @@ import {
 import { getCourseSectionVertical, getCourseUnitData } from '../data/selectors';
 import { getWaffleFlags } from '../../data/selectors';
 import { COMPONENT_TYPES } from '../../generic/block-type-utils/constants';
-import ComponentModalView from './add-component-modals/ComponentModalView';
+import ComponentModalView, { TEMPLATE_NAME_MESSAGES } from './add-component-modals/ComponentModalView';
 import AddComponentButton from './add-component-btn';
 import messages from './messages';
 import { ComponentPicker } from '../../library-authoring/component-picker';
@@ -94,6 +94,16 @@ const AddComponent = ({
     closeAddLibraryContentModal();
   }, [usageId]);
 
+  // The CMS names a new block after its template, in English;
+  // a block created here gets the name in the interface language.
+  const getTemplateDisplayName = (type, boilerplate) => {
+    const list = Array.isArray(componentTemplates) ? componentTemplates : Object.values(componentTemplates);
+    const template = list.find((component) => component?.type === type)
+      ?.templates?.find((item) => (item.boilerplateName || item.category) === boilerplate);
+    const message = TEMPLATE_NAME_MESSAGES[(template?.displayName ?? '').toLowerCase()];
+    return message ? intl.formatMessage(message) : undefined;
+  };
+
   const handleCreateNewXBlock = (type, moduleName) => {
     switch (type) {
       case COMPONENT_TYPES.discussion:
@@ -101,7 +111,11 @@ const AddComponent = ({
         handleCreateNewCourseXBlock({ type, parentLocator: blockId });
         break;
       case COMPONENT_TYPES.problem:
-        handleCreateNewCourseXBlock({ type, parentLocator: blockId }, ({ courseKey, locator }) => {
+        handleCreateNewCourseXBlock({
+          type,
+          parentLocator: blockId,
+          displayName: getDefaultBlockName('problem'),
+        }, ({ courseKey, locator }) => {
           setCourseId(courseKey);
           setBlockType(type);
           setNewBlockId(locator);
@@ -110,7 +124,7 @@ const AddComponent = ({
         break;
       case COMPONENT_TYPES.video:
         handleCreateNewCourseXBlock(
-          { type, parentLocator: blockId },
+          { type, parentLocator: blockId, displayName: getDefaultBlockName('video') },
           /* istanbul ignore next */ ({ courseKey, locator }) => {
             setCourseId(courseKey);
             setBlockType(type);
@@ -155,6 +169,7 @@ const AddComponent = ({
           type,
           boilerplate: moduleName,
           parentLocator: blockId,
+          displayName: moduleName ? getTemplateDisplayName(type, moduleName) : getDefaultBlockName('html'),
         }, /* istanbul ignore next */ ({ courseKey, locator }) => {
           setCourseId(courseKey);
           setBlockType(type);

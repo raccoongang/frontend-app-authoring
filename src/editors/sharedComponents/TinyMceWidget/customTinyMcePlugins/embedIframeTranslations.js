@@ -1,11 +1,14 @@
 /**
- * Ukrainian strings of the custom "Embed iframe" plugin.
+ * Ukrainian strings the language pack lacks: the custom "Embed iframe" plugin and a few editor texts.
  *
  * TinyMCE translates dialog and button texts by looking them up in the language
  * data; the language pack (tinymce-i18n) knows nothing about this plugin, so its
  * texts are added here. `addI18n` merges them into the pack.
  */
 const UK = {
+  // Texts the language pack lacks: the title of the editing area and the code block button.
+  'Rich Text Area': 'Область форматованого тексту',
+  'Code Block': 'Блок коду',
   'Embed iframe': 'Вбудувати iframe',
   'Insert iframe': 'Вставити iframe',
   General: 'Загальні',

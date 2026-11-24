@@ -18,6 +18,7 @@ import {
   updateAssetOrder,
   validateAssetFiles,
 } from './data/thunks';
+import genericMessages from '../generic/messages';
 import messages from './messages';
 import FilesPageProvider from './FilesPageProvider';
 import getPageHeadTitle from '../../generic/utils';
@@ -95,7 +96,7 @@ const FilesPage = ({
 
   const activeColumn = {
     id: 'activeStatus',
-    Header: 'Active',
+    Header: intl.formatMessage(genericMessages.columnActive),
     accessor: 'activeStatus',
     Cell: ({ row }) => ActiveColumn({ row, pageLoadStatus: loadingStatus }),
     Filter: CheckboxFilter,
@@ -107,7 +108,7 @@ const FilesPage = ({
   };
   const accessColumn = {
     id: 'lockStatus',
-    Header: 'Access',
+    Header: intl.formatMessage(genericMessages.columnAccess),
     accessor: 'lockStatus',
     Cell: ({ row }) => AccessColumn({ row }),
     Filter: CheckboxFilter,
@@ -123,7 +124,7 @@ const FilesPage = ({
   };
   const fileSizeColumn = {
     id: 'fileSize',
-    Header: 'File size',
+    Header: intl.formatMessage(genericMessages.columnFileSize),
     accessor: 'fileSize',
     Cell: ({ row }) => {
       const { fileSize } = row.original;
@@ -134,12 +135,12 @@ const FilesPage = ({
   const tableColumns = [
     { ...thumbnailColumn },
     {
-      Header: 'File name',
+      Header: intl.formatMessage(genericMessages.columnFileName),
       accessor: 'displayName',
     },
     { ...fileSizeColumn },
     {
-      Header: 'Type',
+      Header: intl.formatMessage(genericMessages.columnType),
       accessor: 'wrapperType',
       Filter: CheckboxFilter,
       filter: 'includesValue',

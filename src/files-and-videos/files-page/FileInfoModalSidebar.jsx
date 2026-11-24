@@ -67,7 +67,7 @@ const FileInfoModalSidebar = ({
         <IconButton
           src={ContentCopy}
           iconAs={Icon}
-          alt={messages.copyStudioUrlTitle.defaultMessage}
+          alt={intl.formatMessage(messages.copyStudioUrlTitle)}
           onClick={() => navigator.clipboard.writeText(asset?.portableUrl)}
         />
       </ActionRow>
@@ -84,7 +84,7 @@ const FileInfoModalSidebar = ({
         <IconButton
           src={ContentCopy}
           iconAs={Icon}
-          alt={messages.copyWebUrlTitle.defaultMessage}
+          alt={intl.formatMessage(messages.copyWebUrlTitle)}
           onClick={() => navigator.clipboard.writeText(asset?.externalUrl)}
         />
       </ActionRow>

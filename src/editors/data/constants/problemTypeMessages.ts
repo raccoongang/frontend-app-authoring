@@ -10,6 +10,31 @@ import { AdvanceProblemKeys, ProblemTypeKeys } from './problem';
  * translate it here, at the point of display.
  */
 const messages = defineMessages({
+  singleSelectDescription: {
+    id: 'authoring.problemEditor.type.description.multiplechoiceresponse',
+    defaultMessage: 'Enter your single select answers below and select which choices are correct. Learners must choose one correct answer.',
+    description: 'Help text above the answers of this problem type in the editor',
+  },
+  multiSelectDescription: {
+    id: 'authoring.problemEditor.type.description.choiceresponse',
+    defaultMessage: 'Enter your multi select answers below and select which choices are correct. Learners must choose all correct answers.',
+    description: 'Help text above the answers of this problem type in the editor',
+  },
+  dropdownDescription: {
+    id: 'authoring.problemEditor.type.description.optionresponse',
+    defaultMessage: 'Enter your dropdown answers below and select which choice is correct. Learners must select one correct answer.',
+    description: 'Help text above the answers of this problem type in the editor',
+  },
+  numericDescription: {
+    id: 'authoring.problemEditor.type.description.numericalresponse',
+    defaultMessage: 'Enter correct numerical input answers below. Learners must enter one correct answer.',
+    description: 'Help text above the answers of this problem type in the editor',
+  },
+  textInputDescription: {
+    id: 'authoring.problemEditor.type.description.stringresponse',
+    defaultMessage: 'Enter your text input answers below and select which choices are correct. Learners must enter one correct answer.',
+    description: 'Help text above the answers of this problem type in the editor',
+  },
   singleSelectTitle: {
     id: 'authoring.problemEditor.type.title.multiplechoiceresponse',
     defaultMessage: 'Single select',
@@ -123,6 +148,14 @@ const PREVIEWS = {
   [ProblemTypeKeys.TEXTINPUT]: messages.textInputPreview,
 } as const;
 
+const DESCRIPTIONS = {
+  [ProblemTypeKeys.SINGLESELECT]: messages.singleSelectDescription,
+  [ProblemTypeKeys.MULTISELECT]: messages.multiSelectDescription,
+  [ProblemTypeKeys.DROPDOWN]: messages.dropdownDescription,
+  [ProblemTypeKeys.NUMERIC]: messages.numericDescription,
+  [ProblemTypeKeys.TEXTINPUT]: messages.textInputDescription,
+} as const;
+
 const ADVANCED_TITLES = {
   [AdvanceProblemKeys.BLANK]: messages.blankAdvanced,
   [AdvanceProblemKeys.CIRCUITSCHEMATIC]: messages.circuitSchematic,
@@ -146,6 +179,11 @@ export const problemTypeTitle = (intl: IntlShape, key: string, fallback = '') =>
 
 export const problemTypePreview = (intl: IntlShape, key: string, fallback = '') => {
   const message = (PREVIEWS as Record<string, typeof messages.singleSelectPreview>)[key];
+  return message ? intl.formatMessage(message) : fallback;
+};
+
+export const problemTypeDescription = (intl: IntlShape, key: string, fallback = '') => {
+  const message = (DESCRIPTIONS as Record<string, typeof messages.singleSelectDescription>)[key];
   return message ? intl.formatMessage(message) : fallback;
 };
 

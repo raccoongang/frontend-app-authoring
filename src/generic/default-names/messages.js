@@ -21,6 +21,21 @@ const messages = defineMessages({
     defaultMessage: 'Randomized Content Block',
     description: 'Name given to a new randomized content block (library content)',
   },
+  html: {
+    id: 'course-authoring.default-names.html',
+    defaultMessage: 'Text',
+    description: 'Name given to a new text component',
+  },
+  video: {
+    id: 'course-authoring.default-names.video',
+    defaultMessage: 'Video',
+    description: 'Name given to a new video component',
+  },
+  problem: {
+    id: 'course-authoring.default-names.problem',
+    defaultMessage: 'Blank Problem',
+    description: 'Name given to a new problem component',
+  },
   itembank: {
     id: 'course-authoring.default-names.itembank',
     defaultMessage: 'Problem Bank',
