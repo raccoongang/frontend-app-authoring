@@ -1,6 +1,11 @@
 import { defineMessages } from '@edx/frontend-platform/i18n';
 
 const messages = defineMessages({
+  titlePlaceholder: {
+    id: 'authoring.texteditor.header.titlePlaceholder',
+    defaultMessage: 'Title',
+    description: 'Placeholder of the field where the title of the component is edited',
+  },
 
   loading: {
     id: 'authoring.texteditor.title.loading',
