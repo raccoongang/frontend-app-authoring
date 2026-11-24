@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useIntl } from '@edx/frontend-platform/i18n';
 import { Icon, Dropdown } from '@openedx/paragon';
 import { Check } from '@openedx/paragon/icons';
+import messages from '../../../../messages';
 
 const LibrariesV2FilterMenu: React.FC<{
   id: string;
@@ -15,6 +17,7 @@ const LibrariesV2FilterMenu: React.FC<{
   defaultItemSelectedText = '',
   isFiltered,
 }) => {
+  const intl = useIntl();
   const [itemMenuSelected, setItemMenuSelected] = useState(defaultItemSelectedText);
   const handleOrderSelected = (name: string, value: string) => {
     setItemMenuSelected(name);
@@ -34,7 +37,7 @@ const LibrariesV2FilterMenu: React.FC<{
   return (
     <Dropdown id={`dropdown-toggle-${idProp}`}>
       <Dropdown.Toggle
-        alt="dropdown-toggle-menu-items"
+        alt={intl.formatMessage(messages.filterMenuToggleAlt)}
         id={idProp}
         variant="none"
         className="dropdown-toggle-menu-items"

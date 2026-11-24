@@ -72,7 +72,7 @@ const messages = defineMessages({
   filterMenuToggleAlt: {
     id: 'course-authoring.studio-home.courses.filter-menu.toggle-alt',
     defaultMessage: 'Show the filter options',
-    description: 'Accessible name of the button that opens a course filter or sort menu on Studio home',
+    description: 'Accessible name of the button that opens a course or library filter or sort menu on Studio home',
   },
   searchPlaceholder: {
     id: 'course-authoring.studio-home.courses.search.placeholder',
