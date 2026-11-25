@@ -9,6 +9,16 @@ and this project adheres to customized Semantic Versioning e.g.: `teak-rg.1`
 [Unreleased]
 ************
 
+[release/teak-rg.6] - 2026-11-25
+********************************
+
+Fixed:
+======
+* Show the "library ID already taken" error under the Library ID field when creating a library (TEA-304)
+* Fix field validation on the Grading page and stop the save error loop (CC-163)
+* Let authors drag items into collapsed blocks in the course outline (TEA-402)
+* Open the taxonomies page in the top window when its link is clicked in the tags drawer (TEA-403)
+
 [release/teak-rg.5] - 2026-09-10
 ================================
 
